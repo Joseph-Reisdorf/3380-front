@@ -1,0 +1,9 @@
+.link {
+    color: #095199;
+    margin: 0 10px;
+    font-size: 1em;
+    font-weight: bold;
+    &:hover {
+        color: #f0f0f0;
+    }
+}

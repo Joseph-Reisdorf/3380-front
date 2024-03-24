@@ -1,0 +1,25 @@
+/* Sets default styles for entire age */
+/* Color scheme: https://colorkit.co/palette/04192e-095199-21a28a-13a813-ff3e1c/*/
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    display: flex;
+    background-color: #b3b3b3;
+    flex-direction: column;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 16px;
+    color : #060606;
+}
