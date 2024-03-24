@@ -15,7 +15,7 @@ const ArtistsPage = () => {
     useEffect(() => {
         const fetchAllArtists = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/artists/get_artists");
+                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artists`);
                 setArtist(res.data);
             } catch (error) {
                 console.error(error);

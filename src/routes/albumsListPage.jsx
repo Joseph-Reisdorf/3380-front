@@ -7,11 +7,11 @@ const Album = () => {
   useEffect(() => {
     const fetchAlbum = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/albums/get_albums`);
+        const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/get_albums`);
         setAlbum(res.data);
       } catch (error) {
         console.error(error);
-      }
+      } 
     };
 
     fetchAlbum();
