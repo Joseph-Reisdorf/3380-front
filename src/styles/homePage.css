@@ -4,8 +4,6 @@
     flex-direction: column;
     align-items: center;
     margin: 40px;
-    margin-left: 350px; /* Adjust the value based on the width of your left navbar */
-    width: calc(100% - 350px); /* Calculate the width of the remaining area */
 }
 
 

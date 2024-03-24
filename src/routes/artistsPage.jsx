@@ -1,19 +1,21 @@
 // distinct from artistPage -> is artistsPage
 
-import { react, useEffect, useState } from "react";
+import React, { useEffect, UseState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import ArtistPage from "./artistPage"; // to search by id
+
 const ArtistsPage = () => {
 
-    const [artists, setArtist] = useState([]);
+    const [artists, setArtist] = React.useState([]);
     const navigate = useNavigate();
 
 
     useEffect(() => {
         const fetchAllArtists = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artists`);
+                const res = await axios.get("http://localhost:8080/artists/get_artists");
                 setArtist(res.data);
             } catch (error) {
                 console.error(error);
@@ -37,7 +39,6 @@ const ArtistsPage = () => {
                 <div className="artist" key={a.artist_id}>
                     <h3>Name: {a.artist_display_name}</h3>
                     <p>Biography: {a.artist_biography}</p>
-                    <p>ID (TEMP): {a.artist_id}</p>
                 </div>
             ))}
 

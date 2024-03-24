@@ -14,16 +14,16 @@ const ArtistPage = () => {
   useEffect(() => {
     const fetchArtist = async () => {
       try {
-        const artistResponse = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/find_artist_by_id/${artistId}`);
+        const artistResponse = await axios.get(`http://localhost:8080/artists/find_artist_by_id/${artistId}`);
         setArtistData(artistResponse.data);
       } catch (err) {
         setError(err);
       }
-    }; 
+    };
 
     const fetchAlbums = async () => {
       try {
-        const albumsResponse = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_album_by_artist/${artistId}`);
+        const albumsResponse = await axios.get(`http://localhost:8080/albums/find_album_by_artist/${artistId}`);
         if (albumsResponse.data.length === 0) { 
           setNoAlbums(true);
         }  
@@ -68,7 +68,7 @@ const ArtistPage = () => {
       {albumsData.map(album => (
         <div key={album.album_id}>
           <p>
-            Title: <Link to={`/album/${album.album_id}`}>
+            Title: <Link to={`/Album/${album.album_id}`}>
               {album.album_title}
             </Link>
           </p>

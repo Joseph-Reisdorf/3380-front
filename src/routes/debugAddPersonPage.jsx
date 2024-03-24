@@ -24,7 +24,7 @@ const DebugAddPerson = () => {
     const handleClick = async e => {
         e.preventDefault();
         try {
-            await axios.post(`${process.env.REACT_APP_BACK_URL}/debug_person/add_person`, person);
+            await axios.post("http://localhost:8080/debug_person/add_person", person);
 
         } catch (err) {
             console.log(err);
