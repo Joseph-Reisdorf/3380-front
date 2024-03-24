@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get('http://localhost:8080/user_auth', {
+            axios.get(`${process.env.REACT_APP_BACK_URL}/user_auth`, { 
                 headers: {
                     'x-access-token': token,
                 },
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     const loginAuth = async (username, password) => {
         try {
-            const response = await axios.post('http://localhost:8080/login', { username, password });
+            const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/login`, { username, password });
             if (response.data.auth) {
                 localStorage.setItem('token', response.data.token);
                 setLoggedIn(true);

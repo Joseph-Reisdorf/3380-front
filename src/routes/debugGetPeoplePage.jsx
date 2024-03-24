@@ -10,7 +10,7 @@ const DebugGetPeople = () => {
     useEffect(() => {
         const fetchAllPerson = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/debug_person/get_people");
+                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/debug_person/get_people`);
                 setPerson(res.data);
             } catch (error) {
                 console.error(error);
@@ -36,3 +36,5 @@ const DebugGetPeople = () => {
 }
 
 export default DebugGetPeople;
+
+

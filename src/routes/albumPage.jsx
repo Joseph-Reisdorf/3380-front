@@ -9,10 +9,10 @@ const Album = () => {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["album"], 
-    queryFn: () => makeRequest.get(`http://localhost:8080/back_end/Album/find/${albumId}`).then((res) => res.data)
+    queryFn: () => makeRequest.get(`${process.env.REACT_APP_BACK_URL}/back_end/Album/find/${albumId}`).then((res) => res.data) // why is this so badly done, what is this link?
   });
 
-  console.log(data);
+  console.log(data); 
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching data</div>;

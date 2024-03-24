@@ -83,7 +83,7 @@ const CreateAccount = () => {
         }
         
         try {
-            const response = await axios.post("http://localhost:8080/register", {
+            const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/register`, {
                 first_name: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
                 middle_initial: middleInitial.toUpperCase(),
                 last_name: lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase(),
