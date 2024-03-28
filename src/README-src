@@ -1,0 +1,17 @@
+
+*** Files ***
+App.js::
+
+index.js::
+
+*** Directories ***
+context::
+ - has a single file authContext
+ - Is meant to seperate login functionality from the contents of routes. It handle 
+   login context and defines the exports that you will use to check login status.
+routes::
+ - contains the actual pages on our website
+ - 
+styles::
+ - contains CSS for the document. You can organize the CSS files in nested directories if you wish to organize 
+   them but please attempt to keep theme seperate from our functional components
