@@ -8,7 +8,7 @@ import Axios from 'axios';
 import Home from './routes/homePage';
 import Recents from './routes/Recents';
 import Library from './routes/library';
-import Account from './routes/accountsPage';
+import Account from './routes/accountPage';
 import Nav from './routes/Nav';
 import DebugDatabase from './routes/debugDatabasePage';
 import ArtistPage from "./routes/artistPage"; // change path
@@ -18,6 +18,8 @@ import Albums from './routes/albumsListPage';
 import Register from './routes/registerPage';
 import Login from './routes/loginPage';
 import Player from './routes/musicPlayer';
+
+import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 
 Axios.defaults.withCredentials = true;
 
@@ -46,6 +48,7 @@ export default function App() {
           <Route path="/register" element={<Register />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/player" element={<Player />} />
+          <Route path="/artist_dashboard" element={<ArtistDashboardPage />} />
 
           
         </Routes>

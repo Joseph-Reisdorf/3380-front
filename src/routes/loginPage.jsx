@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useAuth } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { loginAuth } = useAuth();
+    const { loggedIn, loginAuth } = useAuth();
 
 
     const [username, setUsername] = useState('');
@@ -52,6 +52,8 @@ const Login = () => {
             console.error('Login error:', err);
         } */
     };
+    
+    // if logged in, redirect to home page
 
     return (
         <div>
