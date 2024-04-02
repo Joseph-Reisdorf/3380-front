@@ -7,6 +7,7 @@ import Home from './routes/homePage';
 import Recents from './routes/Recents';
 import Library from './routes/library';
 import Account from './routes/accountPage';
+import Account from './routes/accountPage';
 import Nav from './routes/Nav';
 import LeftNavBar from './routes/leftNavBar';
 import DebugDatabase from './routes/debugDatabasePage';
@@ -19,6 +20,8 @@ import Login from './routes/loginPage';
 
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 import ArtistLeftNavBar from './routes/artistOnly/ArtistLeftNavBar';
+
+import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 
 Axios.defaults.withCredentials = true;
 

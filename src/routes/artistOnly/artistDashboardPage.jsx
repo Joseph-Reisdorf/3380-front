@@ -37,3 +37,5 @@ const ArtistDashboardPage = ({ setShowArtistNavBar }) => {
 };
 
 export default ArtistDashboardPage;
+
+export default ArtistDashboardPage;

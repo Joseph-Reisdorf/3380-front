@@ -64,8 +64,9 @@ function Nav(){
                 <li><Link to="/playlists" className="playlist">Playlists</Link></li>
                 <li><Link to="/albums" className="albums">Albums</Link></li>
                 <li><Link to="/artists" className="artists">Artists</Link></li>
-                <li><Link to="/debug-database" className="debug-database">DebugDatabase</Link></li>
-                
+                <li><Link to="/artist_dashboard" className="artist_dashboard">Dashboard</Link></li>
+
+ 
                 <div class="search-container">
                     <form action="/search">
                     <input type="text" placeholder="Search.." name="search"></input>

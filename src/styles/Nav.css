@@ -1,8 +1,7 @@
 /*styling for the nav bar */
-body {
-    font-family: Arial, sans-serif;
-  }
+
   .navbar {
+    display: flex;
     min-width: inherit;
     list-style-type: none;
     margin: 0;
@@ -59,7 +58,7 @@ body {
   }
 /* Styling for the user and notification icons */
   .icon-link {
-    padding: 0 10px; 
+    padding: 10px 10px; 
     color: white; 
     font-size: 1.5em; 
   }
