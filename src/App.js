@@ -5,7 +5,7 @@ import Axios from 'axios';
 // routes
 import Home from './routes/homePage';
 import Recents from './routes/Recents';
-import Library from './routes/library';
+import Library from './routes/libraryPage';
 import Account from './routes/accountsPage';
 import Nav from './routes/Nav';
 import DebugDatabase from './routes/debugDatabasePage';
