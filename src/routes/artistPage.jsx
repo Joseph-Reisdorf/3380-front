@@ -68,7 +68,7 @@ const ArtistPage = () => {
       {albumsData.map(album => (
         <div key={album.album_id}>
           <p>
-            Title: <Link to={`/Album/${album.album_id}`}>
+            Title: <Link to={`/album/${album.album_id}`}>
               {album.album_title}
             </Link>
           </p>
