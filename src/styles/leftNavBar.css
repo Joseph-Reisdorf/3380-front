@@ -1,0 +1,46 @@
+/* Styling for the left nav bar */
+.left-nav {
+    position: fixed; /* Fixes the left navbar's position */
+    top: 0; /* Aligns the left navbar to the top */
+    left: 0; /* Aligns the left navbar to the left */
+    height: 100%; /* Makes the left navbar take the full height of the viewport */
+    display: flex;
+    flex-direction: column; /* Arranges the items vertically */
+    align-items: center;
+    background-color: #333;
+    padding: 170px 10px 10px;
+}
+
+/* Styling for the search box */
+.search-container {
+    margin-bottom: 10px; /* Adds space between the search box and other links */
+}
+
+.search-container input[type=text] {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: none;
+}
+
+.search-container button {
+    padding: 8px 12px;
+    background-color: #ddd;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #ccc;
+}
+
+/* Styling for the links */
+.left-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.left-nav a:hover {
+    background-color: #111;
+}

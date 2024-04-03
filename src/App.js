@@ -8,6 +8,7 @@ import Recents from './routes/Recents';
 import Library from './routes/library';
 import Account from './routes/accountPage';
 import Nav from './routes/Nav';
+import LeftNavBar from './routes/leftNavBar';
 import DebugDatabase from './routes/debugDatabasePage';
 import ArtistPage from "./routes/artistPage"; // change path
 import ArtistsPage from './routes/artistsPage';
@@ -27,9 +28,10 @@ export default function App() {
 
   return (
     <div className='app'>
-         
+      <LeftNavBar />
       <header className="App-header">{/*changing the Navbar to my Navbar... */}
           <Nav />
+    
       </header>
 
         <Routes>
