@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'; // Simplified imports
 import axios from "axios";
+import {Routes, Route, Link } from "react-router-dom";
+import AddAlbum from './addAlbumPage';
 
 const Album = () => {
   const [album, setAlbum] = useState([]); // Simplified state initialization
@@ -26,6 +28,13 @@ const Album = () => {
           <p>Release Date: {a.album_release_date}</p>
         </div>
       ))}
+
+    <div className='add-album'>
+            <Link className="link" to="add_album">Add Album</Link>
+            <Routes>
+                <Route path="add_album" element={<AddAlbum />} />
+            </Routes>          
+        </div>
     </div>
   );
 };
