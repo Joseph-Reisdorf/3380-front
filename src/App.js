@@ -2,6 +2,8 @@ import { React, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Axios from 'axios';
 
+
+
 // routes
 import Home from './routes/homePage';
 import Recents from './routes/Recents';
@@ -15,6 +17,7 @@ import Album from './routes/albumPage';
 import Albums from './routes/albumsListPage';
 import Register from './routes/registerPage';
 import Login from './routes/loginPage';
+import Player from './routes/musicPlayer';
 
 Axios.defaults.withCredentials = true;
 
@@ -35,18 +38,17 @@ export default function App() {
           <Route path="account" element={<Account />} />
           <Route path="/artists" element={<ArtistsPage />} />
           <Route path ="/artist/:id" element={<ArtistPage />} />
-          <Route path="/albums/*" element={<Albums />} />
+          <Route path="/albums" element={<Albums />} />
           <Route path ="/album/:id" element={<Album />} />
           <Route path="/recents" element={<Recents />} />
           <Route path="/library" element={<Library />} />
           <Route path="/debug-database/*" element={<DebugDatabase />} />
           <Route path="/register" element={<Register />} /> 
           <Route path="/login" element={<Login />} />
+          <Route path="/player" element={<Player />} />
 
           
         </Routes>
     </div>
   );
 }
-
-
