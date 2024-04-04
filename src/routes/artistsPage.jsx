@@ -1,14 +1,12 @@
 // distinct from artistPage -> is artistsPage
 
-import React, { useEffect, UseState } from "react";
+import { react, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import ArtistPage from "./artistPage"; // to search by id
-
 const ArtistsPage = () => {
 
-    const [artists, setArtist] = React.useState([]);
+    const [artists, setArtist] = useState([]);
     const navigate = useNavigate();
 
 
@@ -39,6 +37,7 @@ const ArtistsPage = () => {
                 <div className="artist" key={a.artist_id}>
                     <h3>Name: {a.artist_display_name}</h3>
                     <p>Biography: {a.artist_biography}</p>
+                    <p>ID (TEMP): {a.artist_id}</p>
                 </div>
             ))}
 
