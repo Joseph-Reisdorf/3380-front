@@ -2,6 +2,7 @@ import { React, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
+import { Link } from 'react-router-dom';
 
 const ArtistDashboardPage = () => {
 
@@ -23,21 +24,24 @@ const ArtistDashboardPage = () => {
     const { loggedIn } = useAuth();
     const navigate = useNavigate();
   
-    // If not an artist, redirect to login page
-    useEffect(() => {
-      if (!loggedIn) {
-        navigate('/login');
-      }
-      else if (!isArtist) {
-        navigate('/');
-      }
-    }, [isArtist, navigate]); // Depend on isArtist to reactively navigate
+    // // If not an artist, redirect to login page
+    // useEffect(() => {
+    //   if (!loggedIn) {
+    //     navigate('/login');
+    //   }
+    //   else if (!isArtist) {
+    //     navigate('/');
+    //   }
+    // }, [isArtist, navigate]); // Depend on isArtist to reactively navigate
   
     return (
         // if not logged in, redirect to login page
         <div>
                 <div>
                     <h1>Artist Dashboard</h1>
+                    <Link to="artist_reportspage">
+                <button>View Reports</button>
+            </Link>
                 </div>
 
         </div>
