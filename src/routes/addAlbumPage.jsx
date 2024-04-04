@@ -67,7 +67,7 @@ const AddAlbum = () => {
                 formData.append("track", file);
             });
 
-            await axios.post("http://localhost:8080/albums/add_album", formData, {
+            await axios.post(`${process.env.REACT_APP_BACK_URL}/albums/add_album`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
