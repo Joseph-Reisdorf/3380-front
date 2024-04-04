@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'; // Simplified imports
+import React, { useState, useEffect } from 'react'; 
 import axios from "axios";
 import {Routes, Route, Link } from "react-router-dom";
 import AddAlbum from './addAlbumPage';
 
 const Album = () => {
-  const [album, setAlbum] = useState([]); // Simplified state initialization
+  const [album, setAlbum] = useState([]); 
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -17,7 +17,7 @@ const Album = () => {
     };
 
     fetchAlbum();
-  }, []); // Dependency array added to ensure this effect runs only once
+  }, []); 
 
   return (
     <div>

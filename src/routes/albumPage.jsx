@@ -1,6 +1,9 @@
+// Album.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Player from './musicPlayer.jsx';
 
 const Album = () => {
   const { id } = useParams(); 
@@ -38,6 +41,12 @@ const Album = () => {
       </div>
       <div>
         <strong>Songs:</strong>
+        <ul>
+          {albumData && albumData.tracks.map((song, index) => (
+            <li key={index}>{song.track_name}</li>
+          ))}
+        </ul>
+        <Player playlist={albumData && albumData.tracks} />
       </div>
     </div>
   );

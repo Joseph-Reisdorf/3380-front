@@ -46,7 +46,7 @@ export default function App() {
           <Route path="/register" element={<Register />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/player" element={<Player />} />
-
+          
           
         </Routes>
     </div>
