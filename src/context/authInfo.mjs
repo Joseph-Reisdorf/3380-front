@@ -36,9 +36,3 @@ export const useIsArtist = () => {
     console.log("Role (from authInfo): " + userRole);
     return userRole === 'a';
 };
-
-export const useIsListener = () => {
-    const { loggedIn, userRole } = useAuth();
-    console.log("Role (from authInfo): " + userRole);
-    return userRole === 'l';
-};

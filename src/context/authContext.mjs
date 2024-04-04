@@ -10,8 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [userRole, setUserRole] = useState(null); // Added userRole state
-    const [listenerId, setListenerId] = useState(null);
-    
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -20,12 +18,10 @@ export const AuthProvider = ({ children }) => {
                 const decoded = jwtDecode(token);
                 setLoggedIn(true);
                 setUserRole(decoded.role); // Set the user role from the decoded token
-                setListenerId(decoded.listener_id);
             } catch (error) {
                 console.error('Error decoding token or Auth error:', error);
                 setLoggedIn(false);
                 setUserRole(null); // Ensure userRole is reset if there's an error
-                setListenerId(null);
             }
             setLoading(false);
         } else {
@@ -41,7 +37,6 @@ export const AuthProvider = ({ children }) => {
                 setLoggedIn(true);
                 const decoded = jwtDecode(response.data.token); // Decode the newly acquired token
                 setUserRole(decoded.role); // Update the role upon successful login
-                setListenerId(decoded.listener_id);
                 return true;
             }
         } catch (error) {
@@ -54,11 +49,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         setLoggedIn(false);
         setUserRole(null); // Reset role on logout
-        setListenerId(null);
     };
 
     return (
-        <AuthContext.Provider value={{ loggedIn, loginAuth, logout, loading, userRole, listenerId }}>
+        <AuthContext.Provider value={{ loggedIn, loginAuth, logout, loading, userRole }}>
             {children}
         </AuthContext.Provider>
     );
