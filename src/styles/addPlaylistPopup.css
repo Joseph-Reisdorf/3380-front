@@ -1,0 +1,25 @@
+/* Style for the popup window */
+.popup-overlay {
+    position: absolute; /* Position the popup window */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Center the popup window */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    z-index: 9999;  /* Ensure the popup appears above other elements */
+  }
+  
+  .popup-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    z-index: 10000; /* Ensure the popup appears above other elements */
+  }
+  
+  .popup-box h2 {
+    margin-top: 0;
+  }
+  

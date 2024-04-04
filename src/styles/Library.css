@@ -1,34 +1,36 @@
 /* Style for the library page */
 .library-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* Style for the button container */
-  .add-playlist-button-container {
-    position: relative;
-    width: 200px; /* Adjust width as needed */
-    height: 150px; /* Adjust height as needed */
-    background-color: #f0f0f0; /* Background color of the box */
-    border: 2px solid #ccc; /* Border style */
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer; /* Cursor style */
-  }
-  
-  /* Style for the plus sign */
-  .add-playlist-button-container::after {
-    content: '+';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 36px; /* Adjust font size as needed */
-    color: #666; /* Color of the plus sign */
-  }
-  
-  /* Style for the button hover effect */
-  .add-playlist-button-container:hover {
-    background-color: #e0e0e0; /* Change background color on hover */
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center; /* Aligns content to the center horizontally */
+  position: relative; /* Ensure relative positioning for absolute child elements */
+}
+
+/* Style for the add playlist button */
+.add-playlist-button-container {
+  width: 200px; /* Adjust width as needed */
+  height: 150px; /* Adjust height as needed */
+  background-color: #f0f0f0; /* Background color of the box */
+  border: 2px solid #ccc; /* Border style */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Cursor style */
+  z-index: 9998; /* Ensure the button appears below the popup */
+  position: relative; /* Ensure relative positioning for z-index to work */
+}
+
+/* Style for the plus sign */
+.add-playlist-button-container::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px; /* Adjust font size as needed */
+  color: #666; /* Color of the plus sign */
+}
+
+/* Style for the button hover effect */
+.add-playlist-button-container:hover {
+  background-color: #e0e0e0; /* Change background color on hover */
+}
