@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import AudioPlayer from "react-h5-audio-player";
-import "react-h5-audio-player/lib/styles.css"; 
+import "react-h5-audio-player/lib/styles.css";
 import axios from 'axios';
 
 function Player({ playlist }) {
   const [currentTrack, setTrackIndex] = useState(0);
   const [blobUrls, setBlobUrls] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchBlobUrls = async () => {
       const urls = await Promise.all(
         playlist.map(async (track) => {
           try {
-  
             const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/${track.track_id}/blob`, {
               responseType: 'arraybuffer'
             });
@@ -22,10 +21,8 @@ function Player({ playlist }) {
               throw new Error('No track blob data received');
             }
 
-    
             const blob = new Blob([response.data], { type: 'audio/mpeg' });
             const blobUrl = URL.createObjectURL(blob);
-            console.log("Blob URL:", blobUrl); 
             return blobUrl;
           } catch (error) {
             console.error("Error fetching blob URL:", error);
@@ -34,6 +31,7 @@ function Player({ playlist }) {
         })
       );
       setBlobUrls(urls);
+      setIsLoading(false); // Set loading state to false after fetching blob URLs
     };
 
     fetchBlobUrls();
@@ -51,10 +49,11 @@ function Player({ playlist }) {
     );
   };
 
-  console.log("Playlist:", playlist);
-  console.log("Current Track Index:", currentTrack);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!playlist || playlist.length === 0 || blobUrls.length === 0) {
+  if (!blobUrls || blobUrls.length === 0) {
     return <div>No tracks available</div>;
   }
 
@@ -66,13 +65,12 @@ function Player({ playlist }) {
         volume="0.5"
         src={blobUrls[currentTrack]} 
         showSkipControls
-        autoPlay={false}
         onClickNext={handleClickNext}
         onEnded={handleEnd}
         onError={(e) => {
           console.error("Audio player error:", e);
         }}
-        // Try other props!
+        playing={false}
       />
     </div>
   );
