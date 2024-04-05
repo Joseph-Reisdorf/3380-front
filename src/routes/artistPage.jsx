@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, Link, redirect } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useAuth } from '../context/authContext.mjs'
 
 const ArtistPage = () => {
   const { id } = useParams();
   const artistId = parseInt(id);
+  const { loggedIn, userRole, listenerId } = useAuth();
   const [artistData, setArtistData] = useState(null);
   const [albumsData, setAlbumsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [noAlbums, setNoAlbums] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -28,8 +31,6 @@ const ArtistPage = () => {
           setNoAlbums(true);
         }  
         else {
-          setAlbumsData(albumsResponse.data);
-          // Adjusting here to handle both an array and a single object
           const albums = Array.isArray(albumsResponse.data) ? albumsResponse.data : [albumsResponse.data];
           setAlbumsData(albums);
         }
@@ -44,9 +45,49 @@ const ArtistPage = () => {
       }
     };
 
+    const checkFollowStatus = async () => {
+      try {
+        if (loggedIn && userRole === 'l' && listenerId) {
+          const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/follow/get_follow?listener_id=${listenerId}&artist_id=${artistId}`);
+          setIsFollowing(response.data.some(follow => follow.artist_id === artistId));
+        }
+        
+      } catch (err) {
+        console.error('Error checking follow status:', err);
+      }
+    };
+
     setIsLoading(true);
-    Promise.all([fetchArtist(), fetchAlbums()]).then(() => setIsLoading(false));
-  }, [artistId]);
+    Promise.all([fetchArtist(), fetchAlbums(), checkFollowStatus()]).then(() => setIsLoading(false));
+  }, [artistId, loggedIn, userRole, listenerId]);
+
+  const handleFollow = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/follow/add_follow`, {
+        listener_id: listenerId,
+        artist_id: artistId
+      });
+      if (response.status === 200) {
+        setIsFollowing(true);
+      }
+    } catch (err) {
+      console.error('Error following artist:', err);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/follow/unFollow`, {
+        listener_id: listenerId,
+        artist_id: artistId
+      });
+      if (response.status === 200) {
+        setIsFollowing(false);
+      }
+    } catch (err) {
+      console.error('Error unfollowing artist:', err);
+    }
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching data</div>;
@@ -64,7 +105,6 @@ const ArtistPage = () => {
       <h2>Albums</h2>
 
       {noAlbums && <div>No albums found for this artist</div>}
-      {console.log(albumsData)}
       {albumsData.map(album => (
         <div key={album.album_id}>
           <p>
@@ -76,62 +116,19 @@ const ArtistPage = () => {
           <p>Description: {album.album_description}</p>
         </div>
       ))}
+
+      {loggedIn && userRole === 'l' && !isFollowing && (
+        <button onClick={handleFollow}>Follow Artist</button>
+      )}
+
+      {loggedIn && userRole === 'l' && isFollowing && (
+        <>
+          <div>You are following this artist</div>
+          <button onClick={handleUnfollow}>Unfollow Artist</button>
+        </>
+      )}
     </div>
   );
 };
 
 export default ArtistPage;
-
-/*import React from 'react';
-
-import { useQuery } from "@tanstack/react-query";
-import makeRequest from "axios";
-import { useParams, Link } from "react-router-dom";
-
-const Artist = () => {
-  const { id } = useParams(); 
-  const artistId = parseInt(id);
-
-  const artistQuery = useQuery({
-    queryKey: ["artist"], 
-    queryFn: () => makeRequest.get(`http://localhost:8080/back_end/Artist/find/${artistId}`).then((res) => res.data)
-  });
-
-  const albumsQuery = useQuery({
-    queryKey: ["albums"], 
-    queryFn: () => makeRequest.get(`http://localhost:8080/back_end/Album/findByArtist/${artistId}`).then((res) => res.data)
-  });
-
-  const { data: artistData, isLoading: isArtistLoading, isError: isArtistError } = artistQuery;
-  const { data: albumsData, isLoading: isAlbumsLoading, isError: isAlbumsError } = albumsQuery;
-
-  if (isArtistLoading || isAlbumsLoading) return <div>Loading...</div>;
-  if (isArtistError || isAlbumsError) return <div>Error fetching data</div>;
-
-  return (
-    <div>
-      <h2>Artist Details</h2>
-      <div>
-        <strong>Email:</strong> {artistData.artist_email}
-      </div>
-      <div>
-        <strong>Display Name:</strong> {artistData.artist_display_name}
-      </div>
-      <div>
-        <strong>Bio:</strong> {artistData.artist_biography}
-      </div>
-      
-      <h2>Albums</h2>
-      {albumsData.map(album => (
-        <div key={album.album_id}>
-          <Link to={`/Album/${album.album_id}`}>
-            {album.album_title}
-          </Link>
-        </div>
-      ))}
-    </div>
-  )
-
-};
-
-export default Artist;*/

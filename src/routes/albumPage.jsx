@@ -8,6 +8,7 @@ const Album = () => {
   const [albumData, setAlbumData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [key, setKey] = useState(0); // Add key state
 
   useEffect(() => {
     const fetchAlbumData = async () => {
@@ -24,6 +25,11 @@ const Album = () => {
     fetchAlbumData();
   }, [albumId]);
 
+  useEffect(() => {
+    // Update key whenever albumId changes
+    setKey(prevKey => prevKey + 1);
+  }, [albumId]);
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching data</div>;
 
@@ -38,6 +44,13 @@ const Album = () => {
       </div>
       <div>
         <strong>Songs:</strong>
+        <ul>
+          {albumData && albumData.tracks.map((song, index) => (
+            <li key={index}>{song.track_name}</li>
+          ))}
+        </ul>
+        {/* Pass key to Player component */}
+        <Player key={key} playlist={albumData && albumData.tracks} />
       </div>
     </div>
   );
