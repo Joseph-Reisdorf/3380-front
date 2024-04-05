@@ -61,6 +61,22 @@ const ArtistPage = () => {
     Promise.all([fetchArtist(), fetchAlbums(), checkFollowStatus()]).then(() => setIsLoading(false));
   }, [artistId, loggedIn, userRole, listenerId]);
 
+
+
+  const updateFollowCount = async (artistId) => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/follow/updateFollow`, {
+        artistId: artistId
+      });
+      if (response.status === 200) {
+        console.log('Follow count updated successfully.');
+      }
+    } catch (err) {
+      console.error('Error updating follow count:', err);
+    }
+  };
+
+  
   const handleFollow = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/follow/add_follow`, {
@@ -69,6 +85,8 @@ const ArtistPage = () => {
       });
       if (response.status === 200) {
         setIsFollowing(true);
+        // Update follow count
+        await updateFollowCount(artistId);
       }
     } catch (err) {
       console.error('Error following artist:', err);
@@ -83,11 +101,15 @@ const ArtistPage = () => {
       });
       if (response.status === 200) {
         setIsFollowing(false);
+        // Update follow count
+        await updateFollowCount(artistId);
       }
     } catch (err) {
       console.error('Error unfollowing artist:', err);
     }
   };
+
+
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching data</div>;
