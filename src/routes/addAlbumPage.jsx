@@ -1,22 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "../context/authContext.mjs";
 
 const AddAlbum = () => {
     const [album, setAlbum] = useState({
-        album_primary_artist_id: "",
+        album_primary_artist_id: "", // Will be set to listenerId
         album_title: "",
         album_description: "",
-        album_genre: "",
-        track_names: [], 
-        track_files: [] 
+        album_genre: "", // Will store genre ID
+        track_names: [],
+        track_files: []
     });
+    const { loggedIn, userRole, listenerId } = useAuth();
+    const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
+    const [genres, setGenres] = useState([]); // State to hold genre options
 
-    const [errors, setErrors] = useState({}); 
-    const [successMessage, setSuccessMessage] = useState(""); 
+    useEffect(() => {
+        setAlbum(prevAlbum => ({ ...prevAlbum, album_primary_artist_id: listenerId }));
+        fetchGenres(); // Fetch genre options when component mounts
+    }, [listenerId]);
+
+    const fetchGenres = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genre`);
+            setGenres(response.data); 
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === "track_name") {
+        if (name === "album_genre") {
+            const selectedGenre = genres.find(genre => genre.genre_id === value); 
+            setAlbum({
+                ...album,
+                album_genre: selectedGenre ? selectedGenre.genre_id : "",
+                [name]: value 
+            });
+        } else if (name === "track_name") {
             const { index } = e.target.dataset;
             const updatedTrackNames = [...album.track_names];
             updatedTrackNames[index] = value;
@@ -30,21 +53,14 @@ const AddAlbum = () => {
                 [name]: value
             });
         }
-
-        if (name === 'album_genre') {
-            if (!/^\d+$/.test(value)) {
-                setErrors({ ...errors, [name]: 'Please enter a valid genre (must be a number).' });
-            } else {
-                setErrors({ ...errors, [name]: '' });
-            }
-        }
     };
+    
 
     const handleFileChange = (e) => {
         const files = e.target.files;
-        const updatedTrackFiles = [...album.track_files]; 
+        const updatedTrackFiles = [...album.track_files];
         for (let i = 0; i < files.length; i++) {
-            updatedTrackFiles.push(files[i]); 
+            updatedTrackFiles.push(files[i]);
         }
         setAlbum({
             ...album,
@@ -59,7 +75,7 @@ const AddAlbum = () => {
             formData.append("album_primary_artist_id", album.album_primary_artist_id);
             formData.append("album_title", album.album_title);
             formData.append("album_description", album.album_description);
-            formData.append("album_genre", album.album_genre);
+            formData.append("album_genre", album.album_genre); 
             album.track_names.forEach((name) => {
                 formData.append("track_name", name);
             });
@@ -72,7 +88,7 @@ const AddAlbum = () => {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            setSuccessMessage("Album Added!"); 
+            setSuccessMessage("Album Added!");
 
             setAlbum({
                 album_primary_artist_id: "",
@@ -82,7 +98,7 @@ const AddAlbum = () => {
                 track_names: [],
                 track_files: []
             });
-            setErrors({}); 
+            setErrors({});
         } catch (err) {
             console.log(err);
         }
@@ -108,17 +124,22 @@ const AddAlbum = () => {
             track_files: updatedTrackFiles
         });
     };
+    
 
     return (
         <div className='add-album'>
             <form>
-                <input type="text" placeholder="Primary Artist ID" onChange={handleChange} name="album_primary_artist_id" value={album.album_primary_artist_id} />
+                <input type="hidden" name="album_primary_artist_id" value={album.album_primary_artist_id} />
                 <input type="text" placeholder="Album Title" onChange={handleChange} name="album_title" value={album.album_title} />
                 <input type="text" placeholder="Description" onChange={handleChange} name="album_description" value={album.album_description} />
-                <input type="text" placeholder="Genre" onChange={handleChange} name="album_genre" value={album.album_genre} />
-                {errors.album_genre && <p style={{ color: 'red' }}>{errors.album_genre}</p>} 
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} 
-                {}
+                <select value={album.album_genre} onChange={handleChange} name="album_genre">
+            <option value="">Select Genre</option>
+             {genres.map(genre => (
+                <option key={genre.genre_id} value={genre.genre_id}>{genre.genre_name}</option>
+            ))}
+                </select>
+                {errors.album_genre && <p style={{ color: 'red' }}>{errors.album_genre}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 {album.track_names.map((trackName, index) => (
                     <div key={index}>
                         <input type="text" placeholder={`Track ${index + 1} Name`} onChange={handleChange} data-index={index} name="track_name" value={trackName} />
