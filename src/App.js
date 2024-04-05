@@ -50,6 +50,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/player" element={<Player />} />
           <Route path="/artist_dashboard" element={<ArtistDashboardPage />} />
+          <Route path="/artist_dashboard/artist_reportspage" element={<ArtistReports />} />
 
           
         </Routes>
