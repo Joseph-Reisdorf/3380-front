@@ -1,4 +1,4 @@
-/* Styling for the left nav bar */
+/* leftNavBar.css */
 .left-nav {
     position: fixed; /* Fixes the left navbar's position */
     top: 0; /* Aligns the left navbar to the top */
@@ -9,6 +9,7 @@
     align-items: center;
     background-color: #333;
     padding: 170px 10px 10px;
+    z-index: 10; /* Ensure the left navbar is on top */
 }
 
 /* Styling for the search box */
@@ -35,12 +36,17 @@
 }
 
 /* Styling for the links */
-.left-nav a {
+.nav-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-items a {
     color: white;
     text-decoration: none;
     padding: 10px;
 }
 
-.left-nav a:hover {
+.nav-items a:hover {
     background-color: #111;
 }

@@ -1,74 +1,87 @@
-/*styling for the nav bar */
+/* Styling for the nav bar */
+.navbar {
+  display: flex;
+  min-width: inherit;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  justify-content: space-between; /* Add this line to align items to the edges */
+}
 
-  .navbar {
-    display: flex;
-    min-width: inherit;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-  }
-  .navbar li {
-    float: left;
-  }
-  .navbar li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-  .navbar li a:hover {
-    background-color: #111;
-  }
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  /* Responsive column layout */
-  .col-3 {
-    float: left;
-    width: 25%;
-  }
-  /* Styling for the search bar */
-  .search-container {
-    float: right;
-  }
-  .search-container input[type=text] {
-    padding: 6px;
-    margin-top: 8px;
-    font-size: 17px;
-    border: none;
-  }
-  .search-container button {
-    float: right;
-    padding: 6px 10px;
-    margin-top: 8px;
-    margin-right: 16px;
-    background: #ddd;
-    font-size: 17px;
-    border: none;
-    cursor: pointer;
-  }
-  .search-container button:hover {
-    background: #ccc;
-  }
+
+.navbar li {
+  float: left;
+}
+
+.navbar li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.navbar li a:hover {
+  background-color: #111;
+}
+
+/* Styling for the search bar */
+.search-container {
+  display: flex;
+  align-items: center; /* Vertically center items */
+}
+
+.search-container input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.search-container button {
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background: #ccc;
+}
+
 /* Styling for the user and notification icons */
-  .icon-link {
-    padding: 10px 10px; 
-    color: white; 
-    font-size: 1.5em; 
-  }
-  
-  /* Make sure the search-container doesn't wrap */
-  .search-container {
-    display: flex;
-    align-items: center;
-  }
-  .navbar img {
-    width: 100px; /* Adjust the width as needed */
-    height: auto; /* Maintain aspect ratio */
-  }
+.icon-link {
+  padding: 10px 10px;
+  color: white;
+  font-size: 1.5em;
+}
+
+/* Adjust the position of the search container */
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Styling for the Dashboard button */
+.dashboard {
+  display: inline-block; /* Make it a block element */
+  color: white; /* Set text color to white */
+  text-align: center; /* Center text */
+  padding: 14px 16px; /* Padding */
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+.dashboard:hover {
+  background-color: #111; /* Change background color on hover */
+}
+
+.navbar img {
+  width: 100px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+}

@@ -1,3 +1,4 @@
+// LeftNavBar.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,8 +7,8 @@ import '../styles/leftNavBar.css';
 
 function LeftNavBar() {
     return (
-        <nav>
-            <div className="left-nav">
+        <nav className="left-nav">
+            <div className="nav-items">
                 {/* Search box */}
                 <div className="search-container">
                     <input type="text" placeholder="Search.." name="search" />
