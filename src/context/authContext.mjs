@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
     const [userRole, setUserRole] = useState(null); // Added userRole state
     const [listenerId, setListenerId] = useState(null);
     
+    
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {

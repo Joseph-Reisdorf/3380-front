@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Routes, Route, Link } from "react-router-dom";
 import AddAlbum from './addAlbumPage';
-import { useIsArtist } from '../context/authInfo.mjs'; // Importing the useIsArtist hook
+import { useIsArtist } from '../context/authInfo.mjs'; 
 
 const Album = () => {
   const [album, setAlbum] = useState([]); 
-  const isArtist = useIsArtist(); // Getting the user's role
+  const isArtist = useIsArtist(); 
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -24,7 +24,7 @@ const Album = () => {
   return (
     <div>
 
-{isArtist && ( // Conditionally render the link if user is an artist
+{isArtist && (
         <div className='add-album'>
           <Link className="link" to="add_album">Add Album</Link>
           <Routes>

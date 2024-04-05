@@ -32,8 +32,8 @@ export const useUserRole = () => {
 
 // Component or custom hook using `useUserRole`
 export const useIsArtist = () => {
-    const { loggedIn, userRole } = useAuth();
-    console.log("Role (from authInfo): " + userRole);
+    const { loggedIn, userRole, listenerId } = useAuth();
+    console.log("Role (from authInfo): " + listenerId);
     return userRole === 'a';
 };
 
