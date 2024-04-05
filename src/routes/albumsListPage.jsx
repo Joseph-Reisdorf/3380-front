@@ -5,7 +5,7 @@ import AddAlbum from './addAlbumPage';
 import { useIsArtist } from '../context/authInfo.mjs'; // Importing the useIsArtist hook
 
 const Album = () => {
-  const [album, setAlbum] = useState([]); // Simplified state initialization
+
   const [album, setAlbum] = useState([]); 
   const isArtist = useIsArtist(); // Getting the user's role
 

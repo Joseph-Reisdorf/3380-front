@@ -34,21 +34,12 @@ function Player({ playlist }) {
       setIsLoading(false); // Set loading state to false after fetching blob URLs
     };
 
-    return (
-      <div className="container">
-        <div className="centered-content">
-          <h1>Hello, audio player!</h1>
-          <AudioPlayer
-            volume="0.5"
-            src={playlist[currentTrack].src}
-            showSkipControls
-            onClickNext={handleClickNext}
-            onEnded={handleEnd}
-            onError={() => { console.log('play error') }}
-            // Try other props!
-          />
-        </div>
-      </div>
+    fetchBlobUrls();
+  }, [playlist]);
+
+  const handleClickNext = () => {
+    setTrackIndex((currentTrack) =>
+      currentTrack < playlist.length - 1 ? currentTrack + 1 : 0
     );
   };
 

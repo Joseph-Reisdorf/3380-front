@@ -21,7 +21,6 @@ import Player from './routes/musicPlayer';
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 import ArtistReports from './routes/artistOnly/artistReportsPage';
 
-import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 
 Axios.defaults.withCredentials = true;
 
