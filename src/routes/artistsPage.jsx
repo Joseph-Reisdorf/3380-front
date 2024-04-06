@@ -48,7 +48,6 @@ const ArtistsPage = () => {
                         <a href="#" onClick={() => goToArtistPage(artist.artist_id)}>{artist.artist_display_name}</a>
                     </h3>
                     <p>Biography: {artist.artist_biography}</p>
-                    <p>ID (TEMP): {artist.artist_id}</p>
                     <p>Followers: {artist.follow_count}</p>
                 </div>
             ))}

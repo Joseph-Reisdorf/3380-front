@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../context/authContext.mjs";
+import { useAuth } from "../../context/authContext.mjs";
 
 const AddAlbum = () => {
     const [album, setAlbum] = useState({
-        album_primary_artist_id: "", // Will be set to listenerId
+        album_primary_artist_id: "", 
         album_title: "",
         album_description: "",
-        album_genre: "", // Will store genre ID
+        album_genre: "", 
         track_names: [],
         track_files: []
     });
-    const { loggedIn, userRole, listenerId } = useAuth();
+    const { listenerId } = useAuth();
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
-    const [genres, setGenres] = useState([]); // State to hold genre options
+    const [genres, setGenres] = useState([]); 
 
     useEffect(() => {
         setAlbum(prevAlbum => ({ ...prevAlbum, album_primary_artist_id: listenerId }));
-        fetchGenres(); // Fetch genre options when component mounts
+        fetchGenres(); 
     }, [listenerId]);
 
     const fetchGenres = async () => {
@@ -83,7 +83,7 @@ const AddAlbum = () => {
                 formData.append("track", file);
             });
 
-            await axios.post(`${process.env.REACT_APP_BACK_URL}/albums/add_album`, formData, {
+            await axios.post(`${process.env.REACT_APP_BACK_URL}/artist_dashboard/add_album`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }

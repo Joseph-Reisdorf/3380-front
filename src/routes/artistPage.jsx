@@ -136,6 +136,7 @@ const ArtistPage = () => {
           </p>
           <p>Release Date: {album.album_release_date.slice(0, 10)}</p>
           <p>Description: {album.album_description}</p>
+          <p>Likes: {album.album_like_count}</p>
         </div>
       ))}
 

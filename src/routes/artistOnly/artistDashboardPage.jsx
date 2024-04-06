@@ -4,6 +4,8 @@ import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 import { Chart } from 'chart.js/auto'; 
+import AddAlbum from './addAlbumPage';
+import { Routes, Route, Link } from "react-router-dom";
 
 const ArtistDashboardPage = () => {
     const isArtist = useIsArtist();
@@ -86,6 +88,13 @@ const ArtistDashboardPage = () => {
             <div>
                 <canvas id="albumLikesChart" width="400" height="400"></canvas>
             </div>
+
+            <div className='add-album'>
+          <Link className="link" to={"add_album"}>Add Album</Link>
+          <Routes>
+            <Route path="add_album" element={<AddAlbum />} />
+          </Routes>          
+        </div>
         </div>
     );
 };

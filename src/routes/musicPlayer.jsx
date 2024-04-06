@@ -69,9 +69,8 @@ function Player({ playlist }) {
   }
 
   return (
-    <div>
-      <h1>Hello, audio player!</h1>
-      <h2>{playlist[currentTrack].track_name}</h2>
+    <div style={{ textAlign: "center" }}>
+      <h2 style={{ marginBottom: "20px" }}>{playlist[currentTrack].track_name}</h2>
       <AudioPlayer
         volume="0.5"
         src={blobUrls[currentTrack]} 

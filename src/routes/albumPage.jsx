@@ -104,6 +104,9 @@ const Album = () => {
         <strong>Description:</strong> {albumData && albumData.album_description}
       </div>
       <div>
+        <strong>Likes:</strong> {albumData && albumData.album_like_count}
+      </div>
+      <div>
         <strong>Songs:</strong>
         <ul>
           {albumData && albumData.tracks.map((song, index) => (
@@ -112,7 +115,6 @@ const Album = () => {
         </ul>
         <Player key={key} playlist={albumData && albumData.tracks} />
       </div>
-      {/* Render like and unlike buttons */}
       {loggedIn && userRole === 'l' && (
         <div>
           {isLiked ? (
