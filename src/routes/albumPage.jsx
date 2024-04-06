@@ -1,9 +1,8 @@
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Player from './musicPlayer.jsx';
+import { useAuth } from '../context/authContext.mjs';
 
 const Album = () => {
   const { id } = useParams(); 
@@ -11,7 +10,9 @@ const Album = () => {
   const [albumData, setAlbumData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [key, setKey] = useState(0); // Add key state
+  const [key, setKey] = useState(0);
+  const { loggedIn, userRole, listenerId } = useAuth();
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     const fetchAlbumData = async () => {
@@ -29,9 +30,66 @@ const Album = () => {
   }, [albumId]);
 
   useEffect(() => {
-    // Update key whenever albumId changes
     setKey(prevKey => prevKey + 1);
   }, [albumId]);
+
+  useEffect(() => {
+    const checkLikeStatus = async () => {
+      try {
+        if (loggedIn && userRole === 'l' && listenerId) {
+          const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/like/get_like?listener_id=${listenerId}&album_id=${albumId}`);
+          setIsLiked(response.data.some(like => like.album_id === albumId));
+        }
+      } catch (err) {
+        console.error('Error checking like status:', err);
+      }
+    };
+    
+    checkLikeStatus();
+  }, [albumId, listenerId, loggedIn, userRole]);
+
+  const updateLikeCount = async (albumId) => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/like/updateLike`, {
+        albumId: albumId
+      });
+      if (response.status === 200) {
+        console.log('Like count updated successfully.');
+      }
+    } catch (err) {
+      console.error('Error updating like count:', err);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/like/add_like`, {
+        listener_id: listenerId,
+        album_id: albumId
+      });
+      if (response.status === 200) {
+        setIsLiked(true);
+        await updateLikeCount(albumId);
+      }
+    } catch (err) {
+      console.error('Error liking album:', err);
+    }
+  };
+
+  const handleUnlike = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/like/unLike`, {
+        listener_id: listenerId,
+        album_id: albumId
+      });
+      if (response.status === 200) {
+        setIsLiked(false);
+        await updateLikeCount(albumId);
+      }
+    } catch (err) {
+      console.error('Error unliking album:', err);
+    }
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching data</div>;
@@ -52,9 +110,18 @@ const Album = () => {
             <li key={index}>{song.track_name}</li>
           ))}
         </ul>
-        {/* Pass key to Player component */}
         <Player key={key} playlist={albumData && albumData.tracks} />
       </div>
+      {/* Render like and unlike buttons */}
+      {loggedIn && userRole === 'l' && (
+        <div>
+          {isLiked ? (
+            <button onClick={handleUnlike}>Unlike</button>
+          ) : (
+            <button onClick={handleLike}>Like</button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

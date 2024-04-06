@@ -1,48 +1,93 @@
-import { React, useEffect } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
+import axios from 'axios';
+import { Chart } from 'chart.js/auto'; 
 
 const ArtistDashboardPage = () => {
+    const isArtist = useIsArtist();
+    const { loggedIn, listenerId } = useAuth();
+    const navigate = useNavigate();
+    const [albumData, setAlbumData] = useState([]);
+    const chartRef = useRef(null);
 
-    /*
     useEffect(() => {
-        const fetchArtist = async () => {
+        const fetchAlbumLikes = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artist/get_artist`);
-                setArtist(res.data);
+                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/likes/${listenerId}`);
+                setAlbumData(response.data);
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching album likes:', error);
             }
         };
-        fetchArtist();
-    }
-    , []);*/
 
-    const isArtist = useIsArtist();
-    const { loggedIn } = useAuth();
-    const navigate = useNavigate();
-  
-    // If not an artist, redirect to login page
+        if (loggedIn && isArtist) {
+            fetchAlbumLikes();
+        } else {
+            navigate('/login');
+        }
+    }, [isArtist, loggedIn, listenerId, navigate]);
+
     useEffect(() => {
-      if (!loggedIn) {
-        navigate('/login');
-      }
-      else if (!isArtist) {
-        navigate('/');
-      }
-    }, [isArtist, navigate]); // Depend on isArtist to reactively navigate
-  
+      
+        if (albumData.length > 0) {
+            drawBarGraph();
+        } // eslint-disable-next-line
+    }, [albumData]);
+
+    const drawBarGraph = () => {
+        const albumTitles = albumData.map(album => album.album_title);
+        const albumLikeCounts = albumData.map(album => album.album_like_count);
+    
+        const canvas = document.getElementById('albumLikesChart');
+        const ctx = canvas.getContext('2d');
+    
+    
+        if (chartRef.current !== null) {
+         
+            chartRef.current.destroy();
+        }
+    
+        chartRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: albumTitles,
+                datasets: [{
+                    label: 'Album Likes',
+                    data: albumLikeCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10, // album like num cap
+                        ticks: {
+                            stepSize: 1,
+                            max: 50
+                        }
+                    }
+                }
+            }
+        });
+    };
+    
+    
+
     return (
-        // if not logged in, redirect to login page
         <div>
-                <div>
-                    <h1>Artist Dashboard</h1>
-                </div>
-
+            <h1>Artist Dashboard</h1>
+            <div>
+                <canvas id="albumLikesChart" width="400" height="400"></canvas>
+            </div>
         </div>
-
     );
-}
+};
 
 export default ArtistDashboardPage;

@@ -7,6 +7,7 @@ function Player({ playlist }) {
   const [currentTrack, setTrackIndex] = useState(0);
   const [blobUrls, setBlobUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const fetchBlobUrls = async () => {
@@ -31,7 +32,7 @@ function Player({ playlist }) {
         })
       );
       setBlobUrls(urls);
-      setIsLoading(false); // Set loading state to false after fetching blob URLs
+      setIsLoading(false);
     };
 
     fetchBlobUrls();
@@ -43,10 +44,20 @@ function Player({ playlist }) {
     );
   };
 
+  const handleClickPrevious = () => {
+    setTrackIndex((currentTrack) =>
+      currentTrack > 0 ? currentTrack - 1 : playlist.length - 1
+    );
+  };
+
   const handleEnd = () => {
     setTrackIndex((currentTrack) =>
       currentTrack < playlist.length - 1 ? currentTrack + 1 : 0
     );
+  };
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
   };
 
   if (isLoading) {
@@ -66,11 +77,14 @@ function Player({ playlist }) {
         src={blobUrls[currentTrack]} 
         showSkipControls
         onClickNext={handleClickNext}
+        onClickPrevious={handleClickPrevious} 
         onEnded={handleEnd}
         onError={(e) => {
           console.error("Audio player error:", e);
         }}
-        playing={false}
+        playing={isPlaying}
+        onPlay={handlePlayPause}
+        onPause={handlePlayPause}
       />
     </div>
   );
