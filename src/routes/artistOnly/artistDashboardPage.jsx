@@ -25,14 +25,14 @@ const ArtistDashboardPage = () => {
     const navigate = useNavigate();
   
     // // If not an artist, redirect to login page
-    // useEffect(() => {
-    //   if (!loggedIn) {
-    //     navigate('/login');
-    //   }
-    //   else if (!isArtist) {
-    //     navigate('/');
-    //   }
-    // }, [isArtist, navigate]); // Depend on isArtist to reactively navigate
+    useEffect(() => {
+      if (!loggedIn) {
+        navigate('/login');
+      }
+      else if (!isArtist) {
+        navigate('/');
+      }
+    }, [isArtist, navigate]); // Depend on isArtist to reactively navigate
   
     return (
         // if not logged in, redirect to login page
