@@ -41,12 +41,12 @@ const Artist = () => {
   const handleSaveClick = async () => {
     try {
       // Send a request to update the biography
-      await axios.put(`${process.env.REACT_APP_BACK_URL}/add_biography`, {
-        artistId: artistData.artist_id,
-        artist_biography: editedBiography
-      });
+      await axios.post(`${process.env.REACT_APP_BACK_URL}/bio/add_biography/${listenerId}/${editedBiography}`);
+
+      alert("Bio Updated!");
       // Disable editing mode after successful update
       setIsEditing(false);
+      artistData.artist_biography = editedBiography;
     } catch (error) {
       console.error('Error updating biography:', error);
       // Handle error
@@ -70,7 +70,7 @@ const Artist = () => {
             onChange={(e) => setEditedBiography(e.target.value)}
           />
         ) : (
-          artistData && artistData.artist_biography
+          <span id = "biotext">{artistData && artistData.artist_biography}</span>
         )}
       </div>
       <div>
