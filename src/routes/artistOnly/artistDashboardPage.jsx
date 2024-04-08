@@ -10,14 +10,13 @@ const ArtistDashboardPage = () => {
     const isArtist = useIsArtist();
     const { loggedIn, listenerId } = useAuth();
     const navigate = useNavigate();
-    const [albumData, setAlbumData] = useState([]);
     const [ageData, setAgeData] = useState([]);
     const chartRef = useRef(null);
 
     useEffect(() => {
         const fetchAgeData = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/dashboard/get_age_data/artistId`);
+                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/dashboard/get_age_data/${listenerId}`);
                 setAgeData(response.data);
             } catch (error) {
                 console.error('Error fetching listeners ages:', error);
