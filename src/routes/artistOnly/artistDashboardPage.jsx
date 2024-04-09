@@ -5,7 +5,7 @@ import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
 import ArtistLeftNavBar from './ArtistLeftNavBar';
 
-const ArtistDashboardPage = () => {
+const ArtistDashboardPage = ({ setShowArtistNavBar }) => {
   const isArtist = useIsArtist();
   const { loggedIn } = useAuth();
   const navigate = useNavigate();
@@ -18,6 +18,11 @@ const ArtistDashboardPage = () => {
       navigate('/');
     }
   }, [isArtist, loggedIn, navigate]); // Depend on isArtist and loggedIn to reactively navigate
+
+  useEffect(() => {
+    setShowArtistNavBar(true); // Show artist left navbar when dashboard is mounted
+    return () => setShowArtistNavBar(false); // Hide artist left navbar when dashboard is unmounted
+  }, [setShowArtistNavBar]);
 
   return (
     <div>

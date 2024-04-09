@@ -22,29 +22,33 @@ import ArtistLeftNavBar from './routes/artistOnly/ArtistLeftNavBar';
 
 Axios.defaults.withCredentials = true;
 
-export default function App() {
+
   
-  const location = useLocation();
-  const [currentPath, setCurrentPath] = useState('');
+
+  export default function App() {
+    const location = useLocation();
+    const [showArtistLeftNavBar, setShowArtistLeftNavBar] = useState(false);
 
   useEffect(() => {
-    setCurrentPath(location.pathname);
+    // Show ArtistLeftNavBar only on ArtistDashboardPage
+    setShowArtistLeftNavBar(location.pathname === '/artist_dashboard');
   }, [location]);
 
 
   return (
-    <div className='app'>
+    <div className="app">
       {/* Conditionally render ArtistLeftNavBar for ArtistDashboardPage */}
-      {currentPath === '/artist_dashboard' && <ArtistLeftNavBar />}
-      {/* Conditionally render Nav for all pages except ArtistDashboardPage */}
-      {currentPath !== '/artist_dashboard' && (
-        <header className="App-header">
-          <Nav />
-        </header>
-      )}
+      {showArtistLeftNavBar && <ArtistLeftNavBar />}
 
-      {/* Conditionally render LeftNavBar for all pages except ArtistDashboardPage */}
-      {currentPath !== '/artist_dashboard' && <LeftNavBar />}
+      {/* Conditionally render Nav and LeftNavBar for all pages except ArtistDashboardPage */}
+      {!showArtistLeftNavBar && (
+        <>
+          <header className="App-header">
+            <Nav />
+          </header>
+          <LeftNavBar />
+        </>
+      )}
 
       <Routes>
         <Route path="/" element={<Home />} />
