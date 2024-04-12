@@ -15,6 +15,8 @@ import Album from './routes/albumPage';
 import Albums from './routes/albumsListPage';
 import Register from './routes/registerPage';
 import Login from './routes/loginPage';
+import TrackListPage from './routes/trackListPage';
+import Search from './routes/searchPage';
 
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 
@@ -34,6 +36,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/tracks" element={<TrackListPage />} />
           <Route path="account" element={<Account />} />
           <Route path="/artists" element={<ArtistsPage />} />
           <Route path ="/artist/:id" element={<ArtistPage />} />
@@ -44,8 +47,8 @@ export default function App() {
           <Route path="/debug-database/*" element={<DebugDatabase />} />
           <Route path="/register" element={<Register />} /> 
           <Route path="/login" element={<Login />} />
-          <Route path="/artist_dashboard" element={<ArtistDashboardPage />} />
-
+          <Route path="/artist_dashboard/*" element={<ArtistDashboardPage />} />
+          <Route path="/search" element={<Search />} />
           
         </Routes>
     </div>

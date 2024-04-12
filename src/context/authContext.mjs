@@ -9,6 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [userId, setUserId] = useState(null); // Added userId state
     const [userRole, setUserRole] = useState(null); // Added userRole state
 
     useEffect(() => {
@@ -18,10 +19,12 @@ export const AuthProvider = ({ children }) => {
                 // Decode the token to get the user's role without making an additional request
                 const decoded = jwtDecode(token);
                 setLoggedIn(true);
+                setUserId(decoded.id); // Set the user ID from the decoded token
                 setUserRole(decoded.role); // Set the user role from the decoded token
             } catch (error) {
                 console.error('Error decoding token or Auth error:', error);
                 setLoggedIn(false);
+                setUserId(null); // Ensure userId is reset if there's an error
                 setUserRole(null); // Ensure userRole is reset if there's an error
             }
             setLoading(false);
@@ -53,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ loggedIn, loginAuth, logout, loading, userRole }}>
+        <AuthContext.Provider value={{ loggedIn, loginAuth, logout, loading, userId, userRole }}>
             {children}
         </AuthContext.Provider>
     );
