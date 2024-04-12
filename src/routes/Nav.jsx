@@ -21,6 +21,7 @@ function Nav(){
                 <li><Link to="/albums" className="albums">Albums</Link></li>
                 <li><Link to="/artists" className="artists">Artists</Link></li>
                 <li><Link to="/artist_dashboard" className="artist_dashboard">Dashboard</Link></li>
+                <li><Link to="/admin_dashboard" className="admin_dashboard">Admin</Link></li>
 
  
                 <div class="search-container">

@@ -20,7 +20,7 @@ import Login from './routes/loginPage';
 import Player from './routes/musicPlayer';
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 import ArtistReports from './routes/artistOnly/artistReportsPage';
-
+import AdminDashboard from './routes/adminDashboard';
 
 Axios.defaults.withCredentials = true;
 
@@ -51,6 +51,7 @@ export default function App() {
           <Route path="/player" element={<Player />} />
           <Route path="/artist_dashboard" element={<ArtistDashboardPage />} />
           <Route path="/artist_dashboard/artist_reportspage" element={<ArtistReports />} />
+          <Route path="/admin_dashboard" element={<AdminDashboard />} />
 
           
         </Routes>

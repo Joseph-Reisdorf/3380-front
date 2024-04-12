@@ -39,8 +39,8 @@ const ArtistDashboardPage = () => {
 
     const drawBarGraph = () => {
         ageData.sort((a, b) => a.age - b.age) 
-        const albumTitles = ageData.map(age => age.listener_age);
-        const albumLikeCounts = ageData.map(age => age.count);
+        const ageOfListeners = ageData.map(age => age.listener_age);
+        const ageCounts = ageData.map(age => age.count);
     
         const canvas = document.getElementById('albumLikesChart');
         const ctx = canvas.getContext('2d');
@@ -54,10 +54,10 @@ const ArtistDashboardPage = () => {
         chartRef.current = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: albumTitles,
+                labels: ageOfListeners,
                 datasets: [{
-                    label: 'Followers Age Count',
-                    data: albumLikeCounts,
+                    label: 'Number of Followers',
+                    data: ageCounts,
                     backgroundColor: 'rgba(225, 97, 163, 0.8)',
                     borderColor: 'rgba(0, 0, 0, 1)',
                     borderWidth: 1

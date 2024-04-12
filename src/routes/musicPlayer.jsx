@@ -7,6 +7,8 @@ function Player({ playlist }) {
   const [currentTrack, setTrackIndex] = useState(0);
   const [blobUrls, setBlobUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  // const [track_id, setTrackId] = useState([]);
+  // const [listenerId, setListenerId] = useState([]); 
 
   useEffect(() => {
     const fetchBlobUrls = async () => {
@@ -23,6 +25,7 @@ function Player({ playlist }) {
 
             const blob = new Blob([response.data], { type: 'audio/mpeg' });
             const blobUrl = URL.createObjectURL(blob);
+            // handleRecents(track_id);
             return blobUrl;
           } catch (error) {
             console.error("Error fetching blob URL:", error);
@@ -37,6 +40,18 @@ function Player({ playlist }) {
     fetchBlobUrls();
   }, [playlist]);
 
+  // const handleRecents = async () => {
+  //   try {
+  //     const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/recents/add_recents`, {
+  //       listen_to_listener_id: listenerId,
+  //       listen_to_track_id: track_id
+  //     });
+  //     if (response.status === 200) {
+  //     }
+  //   } catch (err) {
+  //     console.error('Error Adding Recents', err);
+  //   }
+  // };
   const handleClickNext = () => {
     setTrackIndex((currentTrack) =>
       currentTrack < playlist.length - 1 ? currentTrack + 1 : 0
