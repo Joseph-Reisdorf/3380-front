@@ -6,8 +6,8 @@ const Album = () => {
   const { id } = useParams(); 
   const albumId = parseInt(id);
 
-  const [album, setAlbum] = useState([]);
-  //const [tracks, setTracks] = useState([]);
+  const [album, setAlbum] = useState({});
+  const [tracks, setTracks] = useState([]);
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -22,6 +22,21 @@ const Album = () => {
     fetchAlbum();
   }, [albumId]);
 
+   // get tracks for each album
+    useEffect(() => {
+        const fetchTracks = async () => {
+                try {
+                    const trackRes = await axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${albumId}`);
+                    setTracks(trackRes.data);
+                } catch (error) {
+                    console.error('Error fetching tracks for album:', album.album_id, error);
+                    return { ...album, tracks: [] };  // Ensure tracks is an empty array if the fetch fails
+                }
+            };
+
+        fetchTracks();
+        console.log(tracks);
+    }, [albumId]);
 
   return (
     <div>
@@ -34,6 +49,11 @@ const Album = () => {
       </div>
       <div>
         <strong>Songs:</strong>
+        <ul>
+          {tracks.length > 0 ? tracks.map((track, index) => (
+            <li key={index}>{track.track_name}</li>
+          )) : <li>No tracks available.</li>}
+        </ul>
       </div>
     </div>
   )
