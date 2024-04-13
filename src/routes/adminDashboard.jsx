@@ -29,9 +29,16 @@ const AdminDashboard = () => {
         fetchAllListeners();
     }, []);
 
-    const deleteArtist = async (artistId) => {
+    const deleteArtist = async (artistId, artistDisplayName, artistRegistrationDate, artistBiography, followCount) => {
         try {
-            await axios.post(`${process.env.REACT_APP_BACK_URL}/admin/deleteArtist/${artistId}`);
+            await axios.delete(`${process.env.REACT_APP_BACK_URL}/admin/deleteArtist/${artistId}`, {
+                data: {
+                    artist_display_name: artistDisplayName,
+                    artist_registration_date: artistRegistrationDate,
+                    artist_biography: artistBiography,
+                    follow_count: followCount
+                }
+            });
             
             alert("Artist Deleted!"); // Show a success message
             // Optionally, you can update the state or perform any other actions after deleting the artist
