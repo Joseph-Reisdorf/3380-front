@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
-import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 import AddAlbumPage from './addAlbumPage';
@@ -47,21 +46,44 @@ const ArtistDashboardPage = () => {
         }
 
     }, [userId, loggedIn, loading]);
-    /*
-    // get artist by artist_id
+
+    // get tracks for each album
     useEffect(() => {
-        const fetchArtist = async () => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/find_artist_by_id/${userId}`);
-                setArtist(res.data);
-            } catch (error) {
-                console.error(error);
-            }
+        if (albums.length > 0) {
+            const fetchTracks = async () => {
+                const albumsWithTracks = await Promise.all(albums.map(async (album) => {
+                    try {
+                        const trackRes = await axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${album.album_id}`);
+                        return { ...album, tracks: trackRes.data };  // Append tracks to the album object
+                    } catch (error) {
+                        console.error('Error fetching tracks for album:', album.album_id, error);
+                        return { ...album, tracks: [] };  // Ensure tracks is an empty array if the fetch fails
+                    }
+                }));
+                setAlbums(albumsWithTracks);  // Update the albums state with the new data
+            };
+            fetchTracks();
+        }
+    }, [albums]);
+    /*useEffect(() => {
+        const fetchTracks = async () => {
+            const fetchTrackPromises = albums.map((album) =>
+                axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${album.album_id}`)
+                    .then(trackRes => {
+                        album.tracks = trackRes.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching tracks', error);
+                        album.tracks = [];
+                    })
+                    
+            );
+
+            await Promise.all(fetchTrackPromises);
         };
-        fetchArtist();
-    }, []);
-    console.log("Artist: ", artist);
-*/
+        fetchTracks();
+    }, [albums]);*/
+
 
     return (
         <div>
@@ -72,17 +94,22 @@ const ArtistDashboardPage = () => {
                 { /* Display albums if there are any */ }
                 <div>
                     <h2>Albums</h2>
-                
                     <ul>
                         {albums.map((album) => (
                             <li key={album.album_id}>
                                 <h3>{album.album_title}</h3>
                                 <p>Description: {album.album_description}</p>
-                                <p>Release Date: {album.album_release_date.slice(0, 10)}</p> 
-                                <p>Tracks</p>
+                                <p>Release Date: {album.album_release_date.slice(0, 10)}</p>
+                                <p>Tracks:</p>
+                                <ol>
+                                    {album.tracks && album.tracks.map(track => (
+                                        <li key={track.track_id}>{track.track_name}</li>
+                                    ))}
+                                </ol>
                             </li>
                         ))}
                     </ul>
+
                 </div>
 
                 { /* Conditionally rended based on button click */ }
