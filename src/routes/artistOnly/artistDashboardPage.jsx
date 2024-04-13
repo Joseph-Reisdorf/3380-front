@@ -1,14 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 import AddAlbumPage from './addAlbumPage';
+import AddTrackPage from './addTrackPage';
 
 const ArtistDashboardPage = () => {
 
     const { loggedIn, userId, userRole, loading } = useAuth();
+    const [addingAlbum, setAddingAlbum] = React.useState(false);
+    const [addingTrack, setAddingTrack] = React.useState(false);
+
     const navigate = useNavigate();
+
 
     const [albums, setAlbums] = React.useState([]);
     const [artist, setArtist] = React.useState({});
@@ -29,17 +34,19 @@ const ArtistDashboardPage = () => {
     
     // get album list by primary_artist_id
     useEffect(() => {
-        const fetchAlbums = async () => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${userId}`);
-                setAlbums(res.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchAlbums();
-    }, []);
-    console.log("Albums: ", albums);
+        if (userId && loggedIn && !loading) {
+            const fetchAlbums = async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${userId}`);
+                    setAlbums(res.data);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            fetchAlbums();
+        }
+
+    }, [userId, loggedIn, loading]);
     /*
     // get artist by artist_id
     useEffect(() => {
@@ -55,6 +62,7 @@ const ArtistDashboardPage = () => {
     }, []);
     console.log("Artist: ", artist);
 */
+
     return (
         <div>
                 <div>
@@ -69,17 +77,21 @@ const ArtistDashboardPage = () => {
                         {albums.map((album) => (
                             <li key={album.album_id}>
                                 <h3>{album.album_title}</h3>
-                                <p>{album.album_description}</p>
-                                <p>{album.album_release_date.slice(0, 10)}</p> { /* slice to just date */}
+                                <p>Description: {album.album_description}</p>
+                                <p>Release Date: {album.album_release_date.slice(0, 10)}</p> 
+                                <p>Tracks</p>
                             </li>
                         ))}
                     </ul>
                 </div>
 
-                <Link className="link" to="add_album">Add Album</Link>
-                <Routes>
-                    <Route path="add_album" element={<AddAlbumPage />} />
-                </Routes>
+                { /* Conditionally rended based on button click */ }
+                <div>
+                    <button onClick={() => setAddingAlbum(!addingAlbum)}>Add Album</button>
+                    <button onClick={() => setAddingTrack(!addingTrack)}>Add Track</button>
+                </div>
+                {addingAlbum && <AddAlbumPage />}
+                {addingTrack && <AddTrackPage albums={albums} />}
         </div>
 
     );

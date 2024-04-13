@@ -1,30 +1,36 @@
-import React from 'react';
-import { useQuery } from "@tanstack/react-query";
-import makeRequest from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useParams } from "react-router-dom";
 
 const Album = () => {
   const { id } = useParams(); 
   const albumId = parseInt(id);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["album"], 
-    queryFn: () => makeRequest.get(`${process.env.REACT_APP_BACK_URL}/back_end/Album/find/${albumId}`).then((res) => res.data) // why is this so badly done, what is this link?
-  });
+  const [album, setAlbum] = useState([]);
+  //const [tracks, setTracks] = useState([]);
 
-  console.log(data); 
+  useEffect(() => {
+    const fetchAlbum = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_album_by_id/${albumId}`);
+        setAlbum(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error fetching data</div>;
+    fetchAlbum();
+  }, [albumId]);
+
 
   return (
     <div>
       <h2>Album Details</h2>
       <div>
-        <strong>Title:</strong> {data.album_title}
+        <strong>Title:</strong> {album.album_title}
       </div>
       <div>
-        <strong>Description:</strong> {data.album_description}
+        <strong>Description:</strong> {album.album_description}
       </div>
       <div>
         <strong>Songs:</strong>

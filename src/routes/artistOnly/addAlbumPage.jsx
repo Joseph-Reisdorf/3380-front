@@ -5,8 +5,9 @@ import axios from "axios";
 
 
 const AddAlbumPage = () => {
-    const { userId } = useAuth();
-
+    const { loggedIn, loading, userId } = useAuth();
+    const [tracks, setTracks] = useState([]);
+    
     const [album, setAlbum] = useState({
         album_primary_artist_id: userId,
         album_title: "",
@@ -37,6 +38,7 @@ const AddAlbumPage = () => {
         }
     };    
 
+    // Add album to database
     const handleClick = async e => {
         e.preventDefault();
         try {
@@ -49,11 +51,11 @@ const AddAlbumPage = () => {
             console.log(err);
         };
     };
+
     return (
         <div className='debug-add-person'>
             <h2>Add Album</h2>
             <form>
-                    <h3>Add album</h3>
                     <div>
                         <label >Album Title:</label>
                         <input type="text" id="album_title" name="album_title" onChange={handleChange} required />
@@ -70,8 +72,8 @@ const AddAlbumPage = () => {
                         <label >Album Cover Art:</label>
                         <input type="file" id="album_cover_art" name="album_cover_art"  onChange={handleChange} accept="image/*"/>
                     </div>
-
-                    <div> Tracks </div>
+                    
+                    
                     <button type="submit" onClick={handleClick} >Submit</button>
                 </form>
         </div>

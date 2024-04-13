@@ -23,7 +23,7 @@ const ArtistPage = () => {
 
     const fetchAlbums = async () => {
       try {
-        const albumsResponse = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_album_by_artist/${artistId}`);
+        const albumsResponse = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${artistId}`);
         if (albumsResponse.data.length === 0) { 
           setNoAlbums(true);
         }  
@@ -64,7 +64,6 @@ const ArtistPage = () => {
       <h2>Albums</h2>
 
       {noAlbums && <div>No albums found for this artist</div>}
-      {console.log(albumsData)}
       {albumsData.map(album => (
         <div key={album.album_id}>
           <p>
