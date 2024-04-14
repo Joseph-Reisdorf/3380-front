@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../styles/AdminDashboard.css'
 
 const AdminDashboard = () => {
     const [artists, setArtists] = useState([]);
@@ -10,18 +11,18 @@ const AdminDashboard = () => {
     const [error, setError] = useState(null);
 
 
-    useEffect(() => {
-        const fetchAllListeners = async () => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/admin/listeners`);
-                setListeners(res.data);
-            } catch (error) {
-                console.error(error);
-                setError(error.message);
-            }
-        };
-        fetchAllListeners();
-    }, []);
+    // useEffect(() => {
+    //     const fetchAllListeners = async () => {
+    //         try {
+    //             const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/admin/listeners`);
+    //             setListeners(res.data);
+    //         } catch (error) {
+    //             console.error(error);
+    //             setError(error.message);
+    //         }
+    //     };
+    //     fetchAllListeners();
+    // }, []);
 
     const deleteArtist = async (artistId, artistDisplayName, artistRegistrationDate, artistBiography, followCount) => {
         try {
@@ -64,84 +65,142 @@ const AdminDashboard = () => {
         }
     };
     
-    
-
     const handleSubmit = (event) => {
         event.preventDefault();
         fetchArtistReport();
     };
-console.log(artists);
-    return (
-        <div>
-            <div>
-    <h1>All Artists Registered</h1>
-    {artists.map((artist) => {
-        const registrationDate = new Date(artist.artist_registration_date);
-        const formattedDate = registrationDate.toISOString().split('T')[0];
 
-        return (
-            <div className="artist" key={artist.artist_id}>
-                <h2>{artist.artist_display_name}</h2>
-                <h2>Registered on: {formattedDate}</h2>
-                <button onClick={() => deleteArtist(artist.artist_id)}>Delete</button>
+    const fetchListenerReport = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/admin/showListenerReport/${startMonth}/${endMonth}`);
+            setListeners(response.data.data);
+        } catch (error) {
+            console.error('Error fetching listener report:', error);
+        }
+    };
+    
+    const handleSubmits = (event) => {
+        event.preventDefault();
+        fetchListenerReport();
+    };
+    
+    
+    return (
+        <div className="admin-dashboard-container">
+            <div className="report-container">
+                <h2>Artist Report</h2>
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="reportStartDate">
+                        Start Month:
+                        <input
+                            type="date"
+                            id="reportStartDate"
+                            onChange={(e) => setStartMonth(e.target.value)}
+                            value={startMonth}
+                            required
+                        />
+                    </label>
+                    <label htmlFor="reportEndDate">
+                        End Month:
+                        <input
+                            type="date"
+                            id="reportEndDate"
+                            onChange={(e) => setEndMonth(e.target.value)}
+                            value={endMonth}
+                            required
+                        />
+                    </label>
+                    <button type="submit">Generate Artist Report</button>
+                </form>
+                {/* Render artist report here */}
             </div>
-        );
-    })}
-    <div>
-    <h2>Artist Report</h2>
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="reportStartDate">
-                Start Month:
-                <input
-                type="date"
-                id="reportStartDate"
-                onChange={(e) => setStartMonth(e.target.value)}
-                value={startMonth}
-                required
-                />
-            </label>
-                <label htmlFor="reportEndDate">
-                End Month:
-                <input
-                type="date"
-                id="reportEndDate"
-                onChange={(e) => setEndMonth(e.target.value)}
-                value={endMonth}
-                required
-                />
-            </label>
-            <button type="submit">Generate Report</button>
-        </form>
-        {loading ? (
-            <div>Loading...</div>
-        ) : error ? (
-            <div>Error: {error.response.data.error}</div>
-        ) : artists.length > 0 ? (
-            <ul>
+    <h1>All Artists Registered</h1>
+    <div className="table-container">
+        <table className="table">
+            <thead>
+                <tr className="table-header">
+                    <th>Artist ID</th>
+                    <th>Username</th>
+                    <th>Registration Date</th>
+                    <th>Actions</th> {/* Assuming this is for delete button */}
+                </tr>
+            </thead>
+            <tbody>
                 {artists.map((artist) => (
-                    <li key={artist.artist_id}>
-                        {artist.artist_display_name} - {artist.artist_registration_date}
-                    </li>
+                    <tr className="table-row" key={artist.artist_id}>
+                        <td className="table-cell">{artist.artist_id}</td>
+                        <td className="table-cell">{artist.artist_display_name}</td>
+                        <td className="table-cell">{artist.artist_registration_date.substring(0, 10)}</td>
+                        <td className="table-cell">
+                            <button onClick={() => deleteArtist(artist.artist_id)}>Delete</button>
+                        </td>
+                    </tr>
                 ))}
-            </ul>
-        ) : null}
+            </tbody>
+        </table>
     </div>
+            <div className="report-container">
+                <h2>Listener Report</h2>
+                <form onSubmit={handleSubmits}>
+                    <label htmlFor="listenerReportStartDate">
+                        Start Month:
+                        <input
+                            type="date"
+                            id="listenerReportStartDate"
+                            onChange={(e) => setStartMonth(e.target.value)}
+                            value={startMonth}
+                            required
+                        />
+                    </label>
+                    <label htmlFor="listenerReportEndDate">
+                        End Month:
+                        <input
+                            type="date"
+                            id="listenerReportEndDate"
+                            onChange={(e) => setEndMonth(e.target.value)}
+                            value={endMonth}
+                            required
+                        />
+                    </label>
+                    <button type="submit">Generate Listener Report</button>
+                </form>
+                {/* Render listener report here */}
+            </div>
+            <h1>All Listeners Registered</h1>
+            <div className="table-container">
+            <table className="table">
+    <thead>
+        <tr className="table-header">
+            <th className="table-cell">Listener ID</th>
+            <th className="table-cell">Username</th>
+            <th className="table-cell">Registration Date</th>
+            <th className="table-cell">Actions</th> {/* Assuming this is for delete button */}
+        </tr>
+    </thead>
+    <tbody>
+        {listeners.map((listener) => (
+            <tr className="table-row" key={listener.listener_id}>
+                <td className="table-cell">{listener.listener_id}</td>
+                <td className="table-cell">{listener.listener_username}</td>
+                <td className="table-cell">{listener.person_registration_date.substring(0, 10)}</td>
+                <td className="table-cell">
+                    <button onClick={() => deleteListener(listener.listener_id)}>Delete</button>
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+
 </div>
 
-            <div>
-                <h1>All Listeners Registered</h1>
-                {listeners.map((listener) => (
-                    <div className="listener" key={listener.listener_id}>
-                        <h2>{listener.listener_username}</h2>
-                        <button onClick={() => deleteListener(listener.listener_id)}>Delete</button>
-                    </div>
-                ))}
-            </div>
-            <div>
+            <div className="employees-container">
                 <h1>All Employees Registered</h1>
             </div>
         </div>
     );
+    
+
 };
+
 
 export default AdminDashboard;
