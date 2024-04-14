@@ -87,6 +87,9 @@ const AdminDashboard = () => {
                     </div>
                 ))}
             </div>
+            <div>
+                <h1>All Employees Registered</h1>
+            </div>
         </div>
     );
 };
