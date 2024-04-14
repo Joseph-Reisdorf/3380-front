@@ -5,7 +5,7 @@ import Axios from 'axios';
 // routes
 import Home from './routes/homePage';
 import Recents from './routes/Recents';
-import Library from './routes/library';
+import Library from './routes/libraryPage';
 import Account from './routes/accountPage';
 import Nav from './routes/Nav';
 import DebugDatabase from './routes/debugDatabasePage';
@@ -17,6 +17,7 @@ import Register from './routes/registerPage';
 import Login from './routes/loginPage';
 import TrackListPage from './routes/trackListPage';
 import Search from './routes/searchPage';
+import Playlist from './routes/playlistPage';
 
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/artist_dashboard/*" element={<ArtistDashboardPage />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/playlists" element={<Playlist />} />
           
         </Routes>
     </div>

@@ -8,6 +8,7 @@ import AddTrackPage from './addTrackPage';
 const ArtistDashboardPage = () => {
 
     const { loggedIn, userId, userRole, loading } = useAuth();
+    const [gotAlbums, setGotAlbums] = useState(false);
     const [addingAlbum, setAddingAlbum] = React.useState(false);
     const [addingTrack, setAddingTrack] = React.useState(false);
 
@@ -38,6 +39,8 @@ const ArtistDashboardPage = () => {
                 try {
                     const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${userId}`);
                     setAlbums(res.data);
+
+                    setGotAlbums(true);
                 } catch (error) {
                     console.error(error);
                 }
@@ -64,7 +67,7 @@ const ArtistDashboardPage = () => {
             };
             fetchTracks();
         }
-    }, [albums]);
+    }, [gotAlbums]);
     /*useEffect(() => {
         const fetchTracks = async () => {
             const fetchTrackPromises = albums.map((album) =>
