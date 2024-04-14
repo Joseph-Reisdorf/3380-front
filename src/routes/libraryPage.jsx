@@ -2,12 +2,13 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
-
+import { usePlaylist } from "../context/playlistContext";
 
 
 
 function LibraryPage(){
     const { userId, loading } = useAuth();
+    const { currentTrack, setCurrent } = usePlaylist();
 
     const [tracks, setTracks] = useState([]);
     const [likedTracks, setLikedTracks] = useState([]);
@@ -61,28 +62,12 @@ function LibraryPage(){
             }
         }
     };
-    /*
-    const handleLike = async (trackId) => {
-        if (likedTracks.find(track => track.track_id === trackId)) {
-            // Process unlike
-            try {
-                await axios.delete(`${process.env.REACT_APP_BACK_URL}/tracks/unlike/${trackId}`);
-                
-            } catch (error) {
-                console.error("Error unliking track", trackId, error);
-            }
-        } else {
-            // Process like
-            try {
-                await axios.post(`${process.env.REACT_APP_BACK_URL}/tracks/like/${trackId}`);
-                // its not a fucking set dude
-                l
-            } catch (error) {
-                console.error("Error liking track", trackId, error);
-            }
-        }
+
+    const handlePlay = (track) => {
+        setCurrent(track);
     };
-    */
+
+    
     return(
         <div> 
                 <h2>Tracks</h2>
@@ -94,6 +79,10 @@ function LibraryPage(){
                                 style={{ marginRight: "10px" }}
                             >
                                 {likedTracks.includes(track.track_id) ? 'Unlike' : 'Like'}
+                            </button>
+                            <button onClick={() => handlePlay(track)}
+                                style={{ marginRight: "10px" }}>
+                            Play
                             </button>
                             <Link to={`/track/${track.track_id}`}>{track.track_name}</Link>
                             <p>{track.track_release_date.slice(0, 10)}</p>

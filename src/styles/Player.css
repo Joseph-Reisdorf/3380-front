@@ -1,0 +1,26 @@
+.player-container {
+    flex : 1;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333; /* Dark grey background */
+    color: #fff; /* White text color */
+    padding: 10px 5px 0px 5px; /* Some padding for aesthetic spacing */
+    z-index: 1000; /* Ensures it stays on top of other content */
+  }
+
+.player-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    flex-direction: row;
+    padding: 0px 10px; /* Padding for aesthetic spacing */
+}
+
+.player-bar button {
+    padding: 0x;
+    align-items: center;
+    cursor: pointer;
+}
