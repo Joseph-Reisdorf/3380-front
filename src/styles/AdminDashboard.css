@@ -74,9 +74,14 @@
 }
 
 .graph-container {
-    margin-top: 20px; /* Adjust as needed */
+    margin-top: 15px; /* Adjust as needed */
+    margin-bottom: 15px;
     padding: 20px;
     border: 1px solid #000000;
     border-radius: 5px;
     background-color: #ffffff;
+}
+
+.generate-button {
+   
 }

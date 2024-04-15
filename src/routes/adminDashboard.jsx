@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     const chartRef = useRef(null);
 
 
-    useEffect(() => {
+    
         const fetchArtistData = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/admin/generateArtistTable`);
@@ -21,9 +21,6 @@ const AdminDashboard = () => {
                 console.error('Error artist joined month data:', error);
             }
         };
-    
-        fetchArtistData();
-    }, []);
 
     useEffect(() => { 
         if (artistData.length > 0) {
@@ -32,7 +29,7 @@ const AdminDashboard = () => {
     }, [artistData]);
 
     const drawLineGraph = () => {
-        
+        const colors = ["#bd6f77", "#6f9bc9", "#78d6ac", "#9ddb76", "#d7e378", "#e3bf78", "#e39c78", "#cc78e3", "#f781c6", "#8187f7", "#81bef7", "#81f78b", "#5f5fc7", "#111111", "#AAAAAA"];
         const artistRegistrationMonth = artistData.map(artist => artist.registration_month);
         const artistCount = artistData.map(artist => artist.new_artists_count);
     
@@ -46,13 +43,13 @@ const AdminDashboard = () => {
         }
     
         chartRef.current = new Chart(ctx, {
-            type: 'line',
+            type: 'doughnut',
             data: {
                 labels: artistRegistrationMonth,
                 datasets: [{
                     label: 'Number of Artists',
                     data: artistCount,
-                    backgroundColor: 'rgba(225, 97, 163, 0.8)',
+                    backgroundColor: colors,
                     borderColor: 'rgba(0, 0, 0, 1)',
                     borderWidth: 1
                 }]
@@ -63,7 +60,7 @@ const AdminDashboard = () => {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        suggestedMax: 10, // album like num cap
+                        suggestedMax: 7, 
                         ticks: {
                             stepSize: 1,
                             max: 50
@@ -73,6 +70,17 @@ const AdminDashboard = () => {
             }
         });
     };
+    const handleGenerateGraph = async (event) => {
+        event.preventDefault();
+        await fetchArtistData();
+        if (chartRef.current) {
+            chartRef.current.destroy(); // Destroy the previous chart instance
+        }
+        if (artistData.length > 0) {
+            drawLineGraph();
+        }
+    };
+    
 
     const deleteArtist = async (artistId, artistDisplayName, artistRegistrationDate, artistBiography, followCount) => {
         try {
@@ -246,8 +254,9 @@ const AdminDashboard = () => {
            
 <div className="graph-container">
     <h1>Artists Joined</h1>
-    <div>
-        <canvas id="artistJoinedMonth" width="1000" height="400"></canvas>
+    <div style={{ height: '500px' }}>
+        <button className='generate-button' onClick={handleGenerateGraph}>Generate Graph</button>
+        <canvas id="artistJoinedMonth" width="1500" height="400"></canvas>
     </div>
 </div>
 
