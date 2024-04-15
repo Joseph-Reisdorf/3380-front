@@ -73,3 +73,10 @@
     cursor: pointer;
 }
 
+.graph-container {
+    margin-top: 20px; /* Adjust as needed */
+    padding: 20px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background-color: #ffffff;
+}

@@ -1,28 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../styles/AdminDashboard.css'
+import { Chart } from 'chart.js/auto'; 
 
 const AdminDashboard = () => {
     const [artists, setArtists] = useState([]);
     const [listeners, setListeners] = useState([]);
     const [startMonth, setStartMonth] = useState('');
     const [endMonth, setEndMonth] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [artistData, setArtistData] = useState([]);
+    const chartRef = useRef(null);
 
 
-    // useEffect(() => {
-    //     const fetchAllListeners = async () => {
-    //         try {
-    //             const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/admin/listeners`);
-    //             setListeners(res.data);
-    //         } catch (error) {
-    //             console.error(error);
-    //             setError(error.message);
-    //         }
-    //     };
-    //     fetchAllListeners();
-    // }, []);
+    useEffect(() => {
+        const fetchArtistData = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/admin/generateArtistTable`);
+                setArtistData(response.data.data);
+            } catch (error) {
+                console.error('Error artist joined month data:', error);
+            }
+        };
+    
+        fetchArtistData();
+    }, []);
+
+    useEffect(() => { 
+        if (artistData.length > 0) {
+            drawLineGraph();
+        } // eslint-disable-next-line
+    }, [artistData]);
+
+    const drawLineGraph = () => {
+        
+        const artistRegistrationMonth = artistData.map(artist => artist.registration_month);
+        const artistCount = artistData.map(artist => artist.new_artists_count);
+    
+        const canvas = document.getElementById('artistJoinedMonth');
+        const ctx = canvas.getContext('2d');
+    
+    
+        if (chartRef.current !== null) {
+         
+            chartRef.current.destroy();
+        }
+    
+        chartRef.current = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: artistRegistrationMonth,
+                datasets: [{
+                    label: 'Number of Artists',
+                    data: artistCount,
+                    backgroundColor: 'rgba(225, 97, 163, 0.8)',
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10, // album like num cap
+                        ticks: {
+                            stepSize: 1,
+                            max: 50
+                        }
+                    }
+                }
+            }
+        });
+    };
 
     const deleteArtist = async (artistId, artistDisplayName, artistRegistrationDate, artistBiography, followCount) => {
         try {
@@ -193,9 +243,15 @@ const AdminDashboard = () => {
 
 </div>
 
-            <div className="employees-container">
-                <h1>All Employees Registered</h1>
-            </div>
+           
+<div className="graph-container">
+    <h1>Artists Joined</h1>
+    <div>
+        <canvas id="artistJoinedMonth" width="1000" height="400"></canvas>
+    </div>
+</div>
+
+           
         </div>
     );
     
