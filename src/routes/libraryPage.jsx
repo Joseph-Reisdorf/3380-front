@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { usePlaylist } from "../context/playlistContext";
-
+import PlaylistModal from "./playlistModalComponent.jsx";
 
 
 function LibraryPage(){
@@ -12,6 +12,9 @@ function LibraryPage(){
 
     const [tracks, setTracks] = useState([]);
     const [likedTracks, setLikedTracks] = useState([]);
+
+    const [userPlaylists, setUserPlaylists] = useState([]);
+
 
     useEffect(() => {
         const fetchTracksAndArtists = async () => {
@@ -26,6 +29,20 @@ function LibraryPage(){
         fetchTracksAndArtists();
     }, []);
 
+
+    useEffect(() => {
+        if (!loading && userId) {
+            const fetchUserPlaylists = async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/playlists/get_playlists_by_listener_id/${userId}`);
+                    setUserPlaylists(res.data);
+                } catch (error) {
+                    console.error("Error fetching user playlists:", error);
+                }
+            }
+            fetchUserPlaylists();
+        }
+    }, [userId, loading]);
 
     useEffect(() => {
         if (!loading && userId) {
@@ -67,6 +84,42 @@ function LibraryPage(){
         setCurrent(track);
     };
 
+    const [showModal, setShowModal] = useState(false);
+    const [formData, setFormData] = useState('');
+
+
+
+    const handleOpenModal = (track_id) => {
+        setShowModal(true);
+        setFormData({ ...formData, track_id: track_id }); // Set track_id at the time of opening the modal
+    };
+
+    const handleCloseModal = () => setShowModal(false);
+
+    useEffect(() => {
+        if (!showModal) {
+            setFormData({ playlist_id: '', track_id: '' }); // Reset formData when modal is closed
+        }
+    }, [showModal]);
+    
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const { playlist_id, track_id } = formData;
+    
+        try {
+            await axios.post(`${process.env.REACT_APP_BACK_URL}/playlists/add_track/${playlist_id}/${track_id}`);
+            handleCloseModal();
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
+    };
+
+
+    const findTrackNameById = (trackId) => {
+        const track = tracks.find(track => track.track_id === trackId);
+        return track ? track.track_name : 'Track not found';
+    };
+
     
     return(
         <div> 
@@ -80,16 +133,44 @@ function LibraryPage(){
                             >
                                 {likedTracks.includes(track.track_id) ? 'Unlike' : 'Like'}
                             </button>
+
                             <button onClick={() => handlePlay(track)}
                                 style={{ marginRight: "10px" }}>
                             Play
                             </button>
+
+
+                            <button onClick={() => handleOpenModal(track.track_id)} className="button">Add to Playlist</button>
+                            <PlaylistModal
+                                show={showModal}
+                                onClose={handleCloseModal}
+                                onSubmit={handleSubmit} // Ensure onSubmit is wired up correctly
+                                formData={formData}
+                                setFormData={setFormData}
+                            >
+                                <p>Track: <strong>{findTrackNameById(formData.track_id)}</strong></p>
+                                <form onSubmit={handleSubmit}>
+                                    <label>Playlist:</label>
+                                    <select
+                                        name="playlist_id"
+                                        value={formData.playlist_id || ''}
+                                        onChange={e => setFormData(currentFormData => ({ ...currentFormData, playlist_id: e.target.value }))}
+                                    >
+                                        <option value="" disabled>Select Playlist</option>
+                                        {userPlaylists.map((p) => (
+                                            <option key={p.playlist_id} value={p.playlist_id}>{p.playlist_name}</option>
+                                        ))}
+                                    </select>
+                                </form>
+                            </PlaylistModal>
+
                             <Link to={`/track/${track.track_id}`}>{track.track_name}</Link>
                             <p>{track.track_release_date.slice(0, 10)}</p>
                             <p>{track.artist_display_name}</p>
                         </li>
                     )) : <li>No tracks available.</li>}
                 </ul>
+
         </div>
     );
 }
