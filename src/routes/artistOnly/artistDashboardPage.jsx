@@ -90,11 +90,16 @@ const ArtistDashboardPage = () => {
             </div>
 
             <div className='add-album'>
-          <Link className="link" to={"add_album"}>Add Album</Link>
-          <Routes>
-            <Route path="add_album" element={<AddAlbum />} />
-          </Routes>          
-        </div>
+                <li style={{ listStyleType: 'none', textAlign: 'center' }}>
+                    <Link className="link" to={"add_album"}>Add Album</Link>
+                </li>
+                <Routes>
+                    <Route path="add_album" element={<AddAlbum />} />
+                </Routes>
+                <li style={{ listStyleType: 'none', textAlign: 'center' }}>
+                    <Link to="/clicks_dashboard" className="ClicksDashboard">Album Clicks</Link>
+                </li>          
+            </div>
         </div>
     );
 };

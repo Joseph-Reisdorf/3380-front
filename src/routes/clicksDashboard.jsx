@@ -20,14 +20,14 @@ const ClicksDashboard = () => {
 
     useEffect(() => {
         fetchAlbumReport();
-    }, []); // Fetch album report on component mount
+    }, []); // not sure about this
 
     const handleSubmit = (event) => {
         event.preventDefault();
         fetchAlbumReport();
     };
 
-    // Function to get unique album titles
+
     const getUniqueAlbumTitles = () => {
         const uniqueAlbumTitles = [...new Set(albumClicks.map(album => album.album_title))];
         return uniqueAlbumTitles;
