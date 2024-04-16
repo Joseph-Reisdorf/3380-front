@@ -34,19 +34,28 @@ const Album = () => {
   }, [albumId]);
 
   useEffect(() => {
-    const checkLikeStatus = async () => {
+    const fetchDataAndListen = async () => {
       try {
+        const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_album_by_id/${albumId}`);
+        setAlbumData(response.data);
+  
+        // Update listen_to table if logged in as a listener
         if (loggedIn && userRole === 'l' && listenerId) {
-          const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/like/get_like?listener_id=${listenerId}&album_id=${albumId}`);
-          setIsLiked(response.data.some(like => like.album_id === albumId));
+          await axios.post(`${process.env.REACT_APP_BACK_URL}/albumClicks/add_clicks`, {
+            listen_to_listener_id: listenerId,
+            listen_to_album_id: albumId
+          });
         }
-      } catch (err) {
-        console.error('Error checking like status:', err);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
       }
     };
-    
-    checkLikeStatus();
+  
+    fetchDataAndListen();
   }, [albumId, listenerId, loggedIn, userRole]);
+  
 
   const updateLikeCount = async (albumId) => {
     try {
