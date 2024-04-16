@@ -1,4 +1,3 @@
-// distinct from artistPage -> is artistsPage
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +37,28 @@ const ArtistsPage = () => {
         navigate(`/artist/${artistId}`);
     }
 
+    const handleLike = async (artistId) => {
+        try {
+            // Send a request to like/unlike the artist
+            await axios.post(`${process.env.REACT_APP_BACK_URL}/artist_like/toggle_like`, null, {
+                params: { artistId: artistId }
+            });
+            // Update the artists list after liking/unliking
+            const updatedArtists = artists.map(artist => {
+                if (artist.artist_id === artistId) {
+                    return {
+                        ...artist,
+                        isLiked: !artist.isLiked // Toggle the isLiked state for the specific artist
+                    };
+                }
+                return artist;
+            });
+            setArtists(updatedArtists);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div>
             <h1>All Artists</h1>
@@ -45,11 +66,16 @@ const ArtistsPage = () => {
             {artists.map((artist) => (
                 <div className="artist" key={artist.artist_id}>
                     <h3>
-                        
                         <a href="#" onClick={() => goToArtistPage(artist.artist_id)}>{artist.artist_display_name}</a>
                     </h3>
                     <p>Biography: {artist.artist_biography}</p>
                     <p>Followers: {artist.follow_count}</p>
+                    {/* Like/unlike button */}
+                    <button onClick={() => handleLike(artist.artist_id)}>
+                        {artist.isLiked ? 'Unlike' : 'Like'}
+                    </button>
+                    {/* Green check mark if artist is liked */}
+                    {artist.isLiked && <span style={{ color: 'green' }}>✔</span>}
                 </div>
             ))}
 
@@ -63,46 +89,3 @@ const ArtistsPage = () => {
 }
 
 export default ArtistsPage;
-
-/*
-Reference code
-
-import React, { useEffect, UseState } from "react";
-import axios from "axios";
-
-import "../styles/DebugFetchPerson.css";
-
-const DebugGetPeople = () => {
-
-    const [person, setPerson] = React.useState([]);
-
-    useEffect(() => {
-        const fetchAllPerson = async () => {
-            try {
-                const res = await axios.get("http://localhost:8080/debug_person/get_people");
-                setPerson(res.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchAllPerson();
-    }, []);
-
-
-    return (
-        <div className='debug-fetch-person'>
-            {person.map((p) => (
-                <div className="person" key={p.person_id}>
-                    <h3>Name: {p.person_first_name} {p.person_middle_initial} {p.person_last_name}</h3>
-                    <p>Email: {p.person_email}</p>
-                    <p>Birthdate: {p.person_birthdate}</p>
-                    <p>Address: {p.person_address}</p>
-                </div>
-            
-            ))}
-        </div>
-    );
-}
-
-export default DebugGetPeople;
-*/
