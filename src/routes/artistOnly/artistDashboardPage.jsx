@@ -4,6 +4,7 @@ import { useIsArtist } from '../../context/authInfo';
 import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 import { Chart } from 'chart.js/auto'; 
+import '../../styles/artistDashboard.css'
 import { Routes, Route, Link } from "react-router-dom";
 
 const ArtistDashboardPage = () => {
@@ -42,7 +43,7 @@ const ArtistDashboardPage = () => {
         const ageOfListeners = ageData.map(age => age.listener_age);
         const ageCounts = ageData.map(age => age.count);
     
-        const canvas = document.getElementById('albumLikesChart');
+        const canvas = document.getElementById('ageDataChart');
         const ctx = canvas.getContext('2d');
     
     
@@ -83,14 +84,11 @@ const ArtistDashboardPage = () => {
     
 
     return (
-        <div>
+        <div className="graph-container">
             <h1>Artist Dashboard</h1>
-            <div>
-                <canvas id="albumLikesChart" width="400" height="400"></canvas>
+            <div style={{ height: '500px' }}>
+                <canvas id="ageDataChart" width="400" height="400"></canvas>
             </div>
-
-            <div className='add-album'>
-        </div>
         </div>
     );
 };

@@ -60,7 +60,7 @@ const AdminDashboard = () => {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        suggestedMax: 7, 
+                        suggestedMax: 10, 
                         ticks: {
                             stepSize: 1,
                             max: 50
@@ -251,7 +251,7 @@ const AdminDashboard = () => {
 
 </div>
 
-           
+
 <div className="graph-container">
     <h1>Artists Joined</h1>
     <div style={{ height: '500px' }}>

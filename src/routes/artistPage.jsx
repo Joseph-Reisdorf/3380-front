@@ -64,8 +64,8 @@ const ArtistPage = () => {
   const handleFollow = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/follow/add_follow`, {
-        listener_id: listenerId,
-        artist_id: artistId
+        artist_like_listener_id: listenerId,
+        artist_like_artist_id: artistId
       });
       if (response.status === 200) {
         setIsFollowing(true);
