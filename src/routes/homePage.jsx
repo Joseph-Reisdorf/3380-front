@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 
 import "../styles/homePage.css";
+import Popup from "./popUp";
 
 function Home() {
 
-  const { loggedIn, logout, loading } = useAuth();
+  const { showPopup,loggedIn, logout, loading } = useAuth();
+  //const [showPopup, setShowPopup] = useState(); // State for controlling popup visibility
+  //const isArtist = useIsArtist(); 
+
+  
   
   
   if (loading) {
@@ -32,7 +37,6 @@ function Home() {
 
       <p>In addition to this we are tasked with implementing the actual hosting of a platform similar to many online streaming services.</p>
       
-      
         <div className="login-homepage"> 
           <p className="login-explain">Our website is made for artists of UH. To recieve the ability to be an artist you must be the owner of a @cougarnet.uh.edu or @uh.edu email domain. Listeners who wish to support UH artists may register with any email domain, and will given access to the music on the site.</p>
 
@@ -40,11 +44,20 @@ function Home() {
             <div className="login-links">
               <Link className="login-link" to="/register">Register</Link>
               <Link className="login-link" to="/login">Login</Link>
+              
             </div>
           )}
-          {loggedIn && <button className="logout-button" onClick={logout}>Logout</button>}
+          {loggedIn && (
+          <div>
+          <button className="logout-button" onClick={logout}>Logout</button>
+          
         </div>
-
+          )}
+        </div>
+         {/* Popup */}
+         <Popup trigger={showPopup}>
+            <h3>Followers PopUp</h3>
+        </Popup>
     </div>
   );
 }

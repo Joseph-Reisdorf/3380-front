@@ -11,8 +11,10 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [userRole, setUserRole] = useState(null); // Added userRole state
     const [listenerId, setListenerId] = useState(null);
+    const [showPopup, setShowPopup] = useState(false); //For popup
+    const [key, setKey] = useState(0);
     
-    
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -22,11 +24,13 @@ export const AuthProvider = ({ children }) => {
                 setLoggedIn(true);
                 setUserRole(decoded.role); // Set the user role from the decoded token
                 setListenerId(decoded.listener_id);
+            
             } catch (error) {
                 console.error('Error decoding token or Auth error:', error);
                 setLoggedIn(false);
                 setUserRole(null); // Ensure userRole is reset if there's an error
                 setListenerId(null);
+                
             }
             setLoading(false);
         } else {
@@ -43,6 +47,19 @@ export const AuthProvider = ({ children }) => {
                 const decoded = jwtDecode(response.data.token); // Decode the newly acquired token
                 setUserRole(decoded.role); // Update the role upon successful login
                 setListenerId(decoded.listener_id);
+                
+
+                const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/notifications/get_notifications_by_artist_id/${decoded['listener_id']}`);
+                //setShowPopup(true);
+                if(res.data[0]['notify_artist'] == 1){
+                    setShowPopup(true);
+                    console.log("Just checking");
+                    console.log(decoded['listener_id']);
+                }
+                else{
+                    setShowPopup(false);
+                    console.log(decoded['listener_id']);
+                }
                 return true;
             }
         } catch (error) {
@@ -56,10 +73,11 @@ export const AuthProvider = ({ children }) => {
         setLoggedIn(false);
         setUserRole(null); // Reset role on logout
         setListenerId(null);
+        setShowPopup(false);
     };
 
     return (
-        <AuthContext.Provider value={{ loggedIn, loginAuth, logout, loading, userRole, listenerId }}>
+        <AuthContext.Provider value={{ showPopup, loggedIn, loginAuth, logout, loading, userRole, listenerId }}>
             {children}
         </AuthContext.Provider>
     );

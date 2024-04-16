@@ -21,7 +21,7 @@ import Player from './routes/musicPlayer';
 import AddAlbum from './routes/artistOnly/addAlbumPage';
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 import ArtistNotification from "./routes/artistOnly/notificationsPage";
-
+import Popup from './routes/popUp';
 Axios.defaults.withCredentials = true;
 
 export default function App() {
