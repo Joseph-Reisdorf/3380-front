@@ -25,6 +25,8 @@ import AddEmployeePage from './routes/employeeOnly/addEmployee';
 import EmployeeDashboardPage from './routes/employeeOnly/employeeDashboardPage';
 import NotificationsPage from './routes/notificationPage';
 import CompanyInfo from './routes/employeeOnly/companyInfo';
+import ClicksDashboard from './routes/artistOnly/clicksDashboard';
+
 
 Axios.defaults.withCredentials = true;
 
@@ -58,6 +60,7 @@ export default function App() {
         <Route path="/employee_dashboard/*" element={<EmployeeDashboardPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/company_info" element={<CompanyInfo />} />
+        <Route path="/clicks_dashboard" element={<ClicksDashboard />} />
       </Routes>
 
       <footer>

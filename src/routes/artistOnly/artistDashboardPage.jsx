@@ -137,6 +137,9 @@ const ArtistDashboardPage = () => {
                 </div>
                 {addingAlbum && <AddAlbumPage />}
                 {addingTrack && <AddTrackPage albums={albums} />}
+                <li style={{ listStyleType: 'none', textAlign: 'center' }}>
+                    <Link to="/clicks_dashboard" className="ClicksDashboard">Album Clicks</Link>
+                </li>     
         </div>
 
     );
