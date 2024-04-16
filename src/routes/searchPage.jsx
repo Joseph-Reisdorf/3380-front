@@ -1,11 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { useAuth } from '../context/authContext';
 
 const Search = () => {
   const [searchResults, setSearchResults] = useState([]);
-  const { search } = useLocation(); // Destructure to directly get search part of the location.
+  const { search } = useLocation(); // Destructure to directly get search part of the location.\
+
+  const { loggedIn, userRole, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+        if (!loggedIn) {
+            navigate('/login');
+        }
+        else if (userRole !== 'a') {
+            if (userRole !== 'l') {  
+                navigate('/');
+            }
+        }
+    }
+  }, [loggedIn, userRole, loading, navigate]); 
 
   useEffect(() => {
     const fetchSearchResults = async () => {

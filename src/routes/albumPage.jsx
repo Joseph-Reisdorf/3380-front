@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from '../context/authContext';
 
 const Album = () => {
   const { id } = useParams(); 
@@ -8,6 +9,24 @@ const Album = () => {
 
   const [album, setAlbum] = useState({});
   const [tracks, setTracks] = useState([]);
+
+  const { loggedIn, userRole, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+        if (!loggedIn) {
+            navigate('/login');
+        }
+        else if (userRole !== 'a') {
+            if (userRole !== 'l') {  
+                navigate('/');
+            }
+        }
+    }
+  }, [loggedIn, userRole, loading, navigate]); // Depend on isArtist to reactively navigate
+
+
 
   useEffect(() => {
     const fetchAlbum = async () => {

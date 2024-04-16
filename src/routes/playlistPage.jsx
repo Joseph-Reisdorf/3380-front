@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/authContext';
 
 const PlaylistPage = () => {
-    const { loggedIn, userId, userRole, loading } = useAuth();
+    const { loggedIn, userId, userRole, loading, navListener } = useAuth();
 
     const [playlists, setPlaylists] = useState([]);
     const [newPlaylist, setNewPlaylist] = useState('');
@@ -14,11 +14,27 @@ const PlaylistPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
     
+
+    useEffect(() => {
+        if (!loading) {
+            if (!loggedIn) {
+                navigate('/login');
+            }
+            else if (userRole !== 'a') {
+                if (userRole !== 'l') {  
+                    navigate('/');
+                }
+            }
+        }
+
+    }, [loggedIn, userRole, loading, navigate]); // Depend on isArtist to reactively navigate
+
     useEffect(() => {
         if (!loading) {
             fetchPlaylistsAndTracks();
         }
     }, [loading]);
+
 
     
     const fetchPlaylistsAndTracks = async () => {

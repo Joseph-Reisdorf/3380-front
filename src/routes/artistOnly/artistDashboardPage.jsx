@@ -12,6 +12,7 @@ const ArtistDashboardPage = () => {
     const [addingAlbum, setAddingAlbum] = React.useState(false);
     const [addingTrack, setAddingTrack] = React.useState(false);
 
+
     const navigate = useNavigate();
 
 
@@ -31,6 +32,20 @@ const ArtistDashboardPage = () => {
 
     }, [loggedIn, userRole, loading, navigate]); // Depend on isArtist to reactively navigate
   
+    // get artist by id
+    useEffect(() => {
+        if (userId && loggedIn && !loading) {
+            const fetchArtist = async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/find_artist_by_id/${userId}`);
+                    setArtist(res.data);
+                } catch (error) {
+                    console.error(error);
+            }
+            };
+            fetchArtist();
+        };  
+    }, [userId, loggedIn, loading]);
     
     // get album list by primary_artist_id
     useEffect(() => {
@@ -91,7 +106,7 @@ const ArtistDashboardPage = () => {
     return (
         <div>
                 <div>
-                    <h1>Artist Dashboard</h1>
+                    <h1>Artist Dashboard - {artist && artist.artist_display_name}</h1>
                 </div>
 
                 { /* Display albums if there are any */ }

@@ -1,5 +1,6 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+import { useNavigate  } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode'; // Corrected import
 
 const AuthContext = createContext();
@@ -7,6 +8,7 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
+
     const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState(null); // Added userId state
@@ -48,6 +50,10 @@ export const AuthProvider = ({ children }) => {
         }
         return false;
     };
+
+
+
+  
 
     const logout = () => {
         localStorage.removeItem('token');

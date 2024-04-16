@@ -1,4 +1,77 @@
-/*styling for the nav bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #333;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  color: white;
+  margin: 0; /* Removed the margin here */
+  text-decoration: none;
+}
+
+.nav-item li {
+  margin-right: 10px; /* Maintains spacing between nav items */
+  padding: 10px 0; /* Vertical padding to increase hover area */
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 16px; /* Increased horizontal padding */
+}
+
+.nav-item a:hover {
+  background-color: #111;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Styling for the search container to be on the right */
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container input[type="text"] {
+  padding: 6px;
+  font-size: 17px;
+  border: none;
+  outline: none; /* Removes the outline */
+  color: #333;
+  background-color: #fff;
+}
+
+.search-container button {
+  padding: 6px 10px;
+  background-color: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.search-container button:hover {
+  background-color: #ccc;
+}
+
+.icon-link {
+  padding:  10px;
+  color: white;
+  font-size: 1.5em;
+}
+
+.icon-link:hover {
+  color: #ddd; /* Lightens the icon on hover */
+}
+
+
+/*styling for the nav bar 
 
   .navbar {
     display: flex;
@@ -22,18 +95,15 @@
   .navbar li a:hover {
     background-color: #111;
   }
-  /* Clear floats after the columns */
   .row:after {
     content: "";
     display: table;
     clear: both;
   }
-  /* Responsive column layout */
   .col-3 {
     float: left;
     width: 25%;
   }
-  /* Styling for the search bar */
   .search-container {
     float: right;
   }
@@ -56,19 +126,14 @@
   .search-container button:hover {
     background: #ccc;
   }
-/* Styling for the user and notification icons */
   .icon-link {
     padding: 10px 10px; 
     color: white; 
     font-size: 1.5em; 
   }
-  
-  /* Make sure the search-container doesn't wrap */
   .search-container {
     display: flex;
-    align-items: center;
+    align-items: right;
   }
   .navbar img {
-    width: 100px; /* Adjust the width as needed */
-    height: auto; /* Maintain aspect ratio */
-  }
+  } */

@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { usePlaylist } from "../context/playlistContext";
 import PlaylistModal from "./playlistModalComponent.jsx";
-
+import { useNavigate } from "react-router-dom";
 
 function LibraryPage(){
-    const { userId, loading } = useAuth();
+    const { userId, loading, userRole, loggedIn } = useAuth();
     const { currentTrack, setCurrent } = usePlaylist();
 
     const [tracks, setTracks] = useState([]);
@@ -15,6 +15,7 @@ function LibraryPage(){
 
     const [userPlaylists, setUserPlaylists] = useState([]);
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTracksAndArtists = async () => {
@@ -87,6 +88,20 @@ function LibraryPage(){
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState('');
 
+    // Redirect if not artist or listener
+    useEffect(() => {
+        if (!loading) {
+            if (!loggedIn) {
+                navigate('/login');
+            }
+            else if (userRole !== 'a') {
+                if (userRole !== 'l') {  
+                    navigate('/');
+                }
+            }
+        }
+
+    }, [loggedIn, userRole, loading, navigate]); // Depend on isArtist to reactively navigate
 
 
     const handleOpenModal = (track_id) => {

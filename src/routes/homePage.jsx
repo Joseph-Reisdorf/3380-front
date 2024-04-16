@@ -5,10 +5,24 @@ import { useAuth } from "../context/authContext";
 
 import "../styles/homePage.css";
 
+
+
+
 function Home() {
 
-  const { loggedIn, logout, loading } = useAuth();
+  const { loggedIn, userRole, logout, loading } = useAuth();
   
+  const getRoleName = (role) => {
+    if (role === 'a') {
+      return 'Artist';
+    } else if (role === 'l') {
+      return 'Listener';
+    } else if (role === 'e') {
+      return 'Employee';
+    } else if (role === 'x') {
+      return 'Admin';
+    }
+  }
   
   if (loading) {
     return <div>Loading authentication state...</div>;
@@ -42,9 +56,12 @@ function Home() {
               <Link className="login-link" to="/login">Login</Link>
             </div>
           )}
-          {loggedIn && <button className="logout-button" onClick={logout}>Logout</button>}
+          {loggedIn && 
+              <button className="logout-button" onClick={logout}>Logout</button>
+          }
+        {loggedIn && 
+        <p className="login-explain">Logged in as <strong>{getRoleName(userRole)}</strong></p>}
         </div>
-
     </div>
   );
 }

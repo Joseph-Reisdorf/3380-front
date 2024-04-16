@@ -13,7 +13,19 @@ function Player() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasBeenPlayed, setHasBeenPlayed] = useState(false);
 
-  const { userId, loading } = useAuth();
+  const { loggedIn, userId, userRole, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading) {
+      if (loggedIn && (userRole === 'l' || userRole === 'a')) {
+        setShowPlayer(true);
+      }
+      else {
+        setCurrent(null);
+      }
+
+    }
+  }, [loading, loggedIn, userRole]);
 
   useEffect(() => {
     if (currentTrack) {
