@@ -79,21 +79,23 @@ const ArtistsPage = () => {
     
     const handleLike = async (artistId) => {
         const isLiked = likedArtists.includes(artistId);
-        if (isLiked) {
-            // Process unlike
-            try {
-                await axios.delete(`${process.env.REACT_APP_BACK_URL}/artists/unlike/${artistId}/${userId}`);
-                setLikedArtists(likedArtists.filter(id => id !== artistId)); 
-            } catch (error) {
-                console.error("Error unliking artist", artistId, error);
-            }
-        } else {
-            // Process like
-            try {
-                await axios.post(`${process.env.REACT_APP_BACK_URL}/artists/like/${artistId}/${userId}`);
-                setLikedArtists([...likedArtists, artistId]); 
-            } catch (error) {
-                console.error("Error liking artist", artistId, error);
+        if (!loading && userId) {
+            if (isLiked) {
+                // Process unlike
+                try {
+                    await axios.delete(`${process.env.REACT_APP_BACK_URL}/artists/unlike/${artistId}/${userId}`);
+                    setLikedArtists(likedArtists.filter(id => id !== artistId)); 
+                } catch (error) {
+                    console.error("Error unliking artist", artistId, error);
+                }
+            } else {
+                // Process like
+                try {
+                    await axios.post(`${process.env.REACT_APP_BACK_URL}/artists/like/${artistId}/${userId}`);
+                    setLikedArtists([...likedArtists, artistId]); 
+                } catch (error) {
+                    console.error("Error liking artist", artistId, error);
+                }
             }
         }
     };
@@ -110,7 +112,7 @@ const ArtistsPage = () => {
                         onClick={() => handleLike(artist.artist_id)}
                         style={{ marginRight: "10px" }}
                     >
-                        {likedArtists.includes(artist.artist_id) ? 'Unlike' : 'Like'}
+                        {!loading && likedArtists.includes(artist.artist_id) ? 'Unlike' : 'Like'}
                     </button>
 
                             

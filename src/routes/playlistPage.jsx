@@ -38,24 +38,26 @@ const PlaylistPage = () => {
 
     
     const fetchPlaylistsAndTracks = async () => {
-        try {
-            const playlistRes = await axios.get(`${process.env.REACT_APP_BACK_URL}/playlists/get_playlists_by_listener_id/${userId}`);
-            const playlists = playlistRes.data;
-
-            const tracksPromises = playlists.map(playlist =>
-                axios.get(`${process.env.REACT_APP_BACK_URL}/playlists/get_tracks_by_playlist_id/${playlist.playlist_id}`)
-            );
-
-            const tracksResponses = await Promise.all(tracksPromises);
-            const playlistsWithTracks = playlists.map((playlist, index) => ({
-                ...playlist,
-                tracks: tracksResponses[index].data
-            }));
-
-            setPlaylists(playlistsWithTracks);
-            console.log(playlistsWithTracks);
-        } catch (error) {
-            console.error('Error loading playlists and tracks:', error);
+        if (!loading && userId) {
+            try {
+                const playlistRes = await axios.get(`${process.env.REACT_APP_BACK_URL}/playlists/get_playlists_by_listener_id/${userId}`);
+                const playlists = playlistRes.data;
+    
+                const tracksPromises = playlists.map(playlist =>
+                    axios.get(`${process.env.REACT_APP_BACK_URL}/playlists/get_tracks_by_playlist_id/${playlist.playlist_id}`)
+                );
+    
+                const tracksResponses = await Promise.all(tracksPromises);
+                const playlistsWithTracks = playlists.map((playlist, index) => ({
+                    ...playlist,
+                    tracks: tracksResponses[index].data
+                }));
+    
+                setPlaylists(playlistsWithTracks);
+                console.log(playlistsWithTracks);
+            } catch (error) {
+                console.error('Error loading playlists and tracks:', error);
+            }
         }
     };
 

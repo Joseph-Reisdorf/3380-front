@@ -31,6 +31,7 @@ function Nav(){
                         <>
                         <li><Link to="/employee_dashboard" className="employee_dashboard">Dashboard</Link></li>
                         <li><Link to="/company_info" className="company_info">Company Info</Link></li>
+                        <li><Link to="/analytics" className="departments">Analytics</Link></li>
                         </>
                     )}
 

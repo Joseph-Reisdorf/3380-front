@@ -11,7 +11,8 @@ const ArtistDashboardPage = () => {
     const [gotAlbums, setGotAlbums] = useState(false);
     const [addingAlbum, setAddingAlbum] = React.useState(false);
     const [addingTrack, setAddingTrack] = React.useState(false);
-
+    const [followerCount, setFollowerCount] = useState(0);
+    const [gotFollowerCount, setGotFollowerCount] = useState(false);
 
     const navigate = useNavigate();
 
@@ -83,6 +84,23 @@ const ArtistDashboardPage = () => {
             fetchTracks();
         }
     }, [gotAlbums]);
+
+    // get follower account by artist_id
+    useEffect(() => {
+        if (loggedIn && !loading) {
+            const fetchFollowerCount = async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_likes_count/${userId}`);
+                    setFollowerCount(res.data.likes);
+                    setGotFollowerCount(true);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+            fetchFollowerCount();
+        }
+
+    }, [userId, loggedIn, loading]);
     /*useEffect(() => {
         const fetchTracks = async () => {
             const fetchTrackPromises = albums.map((album) =>
@@ -109,6 +127,9 @@ const ArtistDashboardPage = () => {
                     <h1>Artist Dashboard - {artist && artist.artist_display_name}</h1>
                 </div>
 
+                <div className="Follower count:">
+                    <p>Follower Count: <strong>{followerCount}</strong></p>
+                </div>
                 { /* Display albums if there are any */ }
                 <div>
                     <h2>Albums</h2>

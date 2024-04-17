@@ -1,36 +1,81 @@
-import {React, useState} from "react";
-
+import {React, useEffect, useState} from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 
 import "../styles/homePage.css";
-
+import PopUp from "./popUp";
 
 
 
 function Home() {
 
-  const { loggedIn, userRole, logout, loading } = useAuth();
+
+  const [showPopup, setShowPopup] = useState(false); //For popup
+  const [followerAlert, setFollowerAlert] = useState([]); 
+
+  const { loggedIn, userRole, userId, logout, loading } = useAuth();
   
   const getRoleName = (role) => {
-    if (role === 'a') {
-      return 'Artist';
-    } else if (role === 'l') {
-      return 'Listener';
-    } else if (role === 'e') {
-      return 'Employee';
-    } else if (role === 'x') {
-      return 'Admin';
+    switch (role) {
+      case 'a': return 'Artist';
+      case 'l': return 'Listener';
+      case 'e': return 'Employee';
+      case 'x': return 'Admin';
+      default: return '';
     }
-  }
-  
-  if (loading) {
-    return <div>Loading authentication state...</div>;
-  }
+  };
+ 
+
+  useEffect(() => {
+    async function fetchFollowerAlerts() {
+      if (loggedIn && userId && userRole === 'a') {
+        try {
+          console.log("Getting follower alerts");
+          const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/notifications/get_new_follower_alerts/${userId}`);
+          
+          if (res.data.length > 0) {
+            console.log(followerAlert);
+            setFollowerAlert(res.data);
+            setShowPopup(true);
+          }
+        } catch (err) {
+          console.error("Failed to fetch follower alerts:");
+        }
+      }
+    }
+
+    fetchFollowerAlerts();
+  }, [loggedIn, loading, userId, userRole]); // Dependency array ensures this runs only on changes to these values
+
+  const handleClosePopup = async (id) => {
+    try {
+      // API call to mark the alert as read or handled
+      await axios.put(`${process.env.REACT_APP_BACK_URL}/notifications/mark_notification_as_seen/${id}`);
+      // Filter out the alert from the state
+      setFollowerAlert(currentAlerts => currentAlerts.filter(alert => alert.follower_alert_id !== id));
+      if (followerAlert.length <= 1) {
+        setShowPopup(false); // Only hide if last alert is being closed
+      }
+    } catch (err) {
+      console.error("Failed to mark alert as read:", err);
+    }
+  };
 
   return (
-    <div className="home-content">
 
+    <div className="home-content">
+      {followerAlert.length > 0 && followerAlert.map((alert) => {
+        return (
+          <PopUp 
+            show={showPopup} 
+            close={() => handleClosePopup(alert.follower_alert_id)}
+            message={alert.follower_alert_message}
+          >
+          </PopUp>
+        );
+      })}
+    
       <h1>HOME</h1>
       <p>Welcome to our Online Music Library. The goal of this application is to create website that interacts with a mySQL database using React and Node.js. We have 5 main requirements for this application as specified by the Professor.</p>
 

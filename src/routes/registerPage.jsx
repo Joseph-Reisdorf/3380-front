@@ -15,7 +15,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@(?:gmail\.com|cougarnet\.uh\.edu|uh\.edu
 
 
 const CreateAccount = () => {
-    
+
     const userRef = useRef();
     const errRef = useRef();
 
@@ -81,7 +81,7 @@ const CreateAccount = () => {
             setErrMsg("Invalid Entry");
             return;
         }
-        
+
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/register`, {
                 first_name: firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(),
@@ -95,13 +95,13 @@ const CreateAccount = () => {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: false
             });
-            
-            
+
+
             console.log(response?.data);
             console.log(response?.accessToken);
             console.log(JSON.stringify(response))
             setSuccess(true);
-            
+
             //clear state and controlled inputs
             //need value attrib on inputs for this
             setFirstName('');
@@ -126,8 +126,6 @@ const CreateAccount = () => {
 
     return (
         <div className="create-account-container">
-            <button onClick={() => console.log({ validName, validPwd, validMatch, validBirthdate })
-}>debug</button>
             {success ? (
                 <section>
                     <h1>Success!</h1>
@@ -140,7 +138,7 @@ const CreateAccount = () => {
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <h1>Register</h1>
                     <form onSubmit={handleSubmit}>
-                    <label htmlFor="firstName">First Name:</label>
+                        <label htmlFor="firstName">First Name:</label>
                         <input
                             type="text"
                             id="firstName"
@@ -166,7 +164,7 @@ const CreateAccount = () => {
                         />
                         <label htmlFor="username">
                             Username:
-                            
+
                         </label>
                         <input
                             type="text"
@@ -182,7 +180,7 @@ const CreateAccount = () => {
                             onBlur={() => setUserFocus(false)}
                         />
                         <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
-                            
+
                             4 to 24 characters.<br />
                             Must begin with a letter.<br />
                             Letters, numbers, underscores, hyphens allowed.
@@ -191,7 +189,7 @@ const CreateAccount = () => {
 
                         <label htmlFor="password">
                             Password:
-                       
+
                         </label>
                         <input
                             type="password"
@@ -205,7 +203,7 @@ const CreateAccount = () => {
                             onBlur={() => setPwdFocus(false)}
                         />
                         <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                           
+
                             8 to 24 characters.<br />
                             Must include uppercase and lowercase letters, a number and a special character.<br />
                             Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
@@ -214,8 +212,8 @@ const CreateAccount = () => {
 
                         <label htmlFor="confirm_pwd">
                             Confirm Password:
-                        
-                         
+
+
                         </label>
                         <input
                             type="password"
@@ -229,7 +227,7 @@ const CreateAccount = () => {
                             onBlur={() => setMatchFocus(false)}
                         />
                         <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                            
+
                             Must match the first password input field.
                         </p>
 
@@ -247,7 +245,7 @@ const CreateAccount = () => {
                         <p id="emailnote" className={!EMAIL_REGEX.test(email) ? "instructions" : "offscreen"}>
                             Email format must be valid and end with @gmail.com, @uh.edu, or @cougarnet.uh.edu
                         </p>
-                        
+
                         <label htmlFor="birthdate">Birthdate:</label>
                         <input
                             type="date"
@@ -264,7 +262,7 @@ const CreateAccount = () => {
 
                         <button disabled={!validName || !validPwd || !validMatch || !validBirthdate ? true : false}>Sign Up</button>
                     </form>
-                    
+
                 </section>
             )}
         </div>
