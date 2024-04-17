@@ -3,6 +3,7 @@ import '../styles/popUp.css';
 
 function Popup(props){
     const handleClose = () => {
+        
         // Refresh the page
         window.location.reload();
     };
