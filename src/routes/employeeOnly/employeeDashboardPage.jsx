@@ -62,7 +62,7 @@ const EmployeeDashboardPage = () => {
     }, [loggedIn, loading]);
 
     return (
-        <div>
+        <div>  
             <h1>Employee Dashboard</h1>
             <CompanyInfoPage/>
             <button onClick={handleShowAddEmployee}>Add Employee</button>
