@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../context/authContext';
 import GenreGraph from './GenreGraph'; // Import GenreGraph component
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../styles/EmployeeDashboard.css';
+//import '../styles/EmployeeDashboard.css';
 
-const EmployeeDashboard = () => {
+const GenreReportPage = () => {
+    const { userId, userRole, loading } = useAuth();
+
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [selectedGenre, setSelectedGenre] = useState('');
@@ -17,14 +20,16 @@ const EmployeeDashboard = () => {
     useEffect(() => {
         const fetchGenres = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/getAllGenreNames`);
+                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_genres`);
                 setGenres(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching genres:', error);
             }
         };
         fetchGenres();
-    }, []);
+        console.log("fetching genres");
+    }, [userId, userRole, loading]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -33,13 +38,15 @@ const EmployeeDashboard = () => {
             return;
         }
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/getMostListenedGenres`, {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_most_listened_genres`, {
                 params: {
+                    selectedGenre,
                     startDate,
                     endDate
                 }
             });
             setGenreData(response.data);
+            console.log(response.data);
             setErrorMessage('');
         } catch (error) {
             console.error('Error fetching most listened genres:', error);
@@ -48,17 +55,19 @@ const EmployeeDashboard = () => {
     };
 
     const handleGenreChange = async (event) => {
-        const selectedGenre = event.target.value;
-        setSelectedGenre(selectedGenre);
+
+        setSelectedGenre(event.target.value);
+    
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/getMostListenedSongsByGenre`, {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_most_listened_songs_by_genre`, {
                 params: {
-                    genre: selectedGenre,
+                    selectedGenre,
                     startDate,
                     endDate
                 }
             });
             setTracks(response.data);
+            console.log(response.data);
             setErrorMessage('');
         } catch (error) {
             console.error('Error fetching top tracks by genre:', error);
@@ -68,7 +77,6 @@ const EmployeeDashboard = () => {
 
     return (
         <div className="employee-dashboard-container">
-            <h1>Employee Dashboard</h1>
             <div className="form-container">
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="startDate">
@@ -106,16 +114,15 @@ const EmployeeDashboard = () => {
                 </div>
             )}
             <div className="genre-select-container">
-                <label htmlFor="genreSelect">Select Genre:</label>
+                <label >Select Genre:</label>
                 <select
-                    id="genreSelect"
                     value={selectedGenre}
                     onChange={handleGenreChange}
                     required
                 >
                     <option value="">Select Genre</option>
-                    {genreData.map((genre, index) => (
-                        <option key={index} value={genre.genre_name}>{genre.genre_name}</option>
+                    {genres.map((genre) => (
+                        <option key={genre.genre_index} value={genre.genre_id}>{genre.genre_name}</option>
                     ))}
                 </select>
             </div>
@@ -133,4 +140,4 @@ const EmployeeDashboard = () => {
     );
 };
 
-export default EmployeeDashboard;
+export default GenreReportPage;

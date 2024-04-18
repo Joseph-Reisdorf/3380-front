@@ -27,7 +27,7 @@ function Nav(){
                     {(userRole === 'a') && (
                         <li><Link to="/artist_dashboard" className="artist_dashboard">Dashboard</Link></li>
                     )}
-                    {(userRole === 'a' || userRole === 'x') && (
+                    {(userRole === 'a' || userRole === 'l') && (
                         <>
                         <li><Link to="/employee_dashboard" className="employee_dashboard">Dashboard</Link></li>
                         <li><Link to="/analytics" className="departments">Analytics</Link></li>
