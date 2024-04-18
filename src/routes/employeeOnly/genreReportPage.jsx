@@ -4,7 +4,7 @@ import { useAuth } from '../../context/authContext';
 import GenreGraph from './GenreGraph'; // Import GenreGraph component
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-//import '../styles/EmployeeDashboard.css';
+import '../../styles/GenreReportPage.css'; // Import the CSS file
 
 const GenreReportPage = () => {
     const { userId, userRole, loading } = useAuth();
