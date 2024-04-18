@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import GenreReportPage from './genreReportPage';
 import ArtistListenerReportPage from './artstListenerReportPage';
+import ArtistRankingReport from './artistRankingReportPage'; // Updated import statement
 import { useAuth } from '../../context/authContext';
 import '../../styles/AnalyticsPage.css';
 
@@ -10,19 +11,30 @@ const AnalyticsPage = () => {
     const { loggedIn, userRole, loading } = useAuth();
     const navigate = useNavigate();
 
+   
     const [showGenre, setShowGenre] = useState(false);
     const [showArtistListener, setShowArtistListener] = useState(false);
+    const [showArtistRankingReport, setShowArtistRankingReport] = useState(false); // Updated state name
 
     // Handle showing Genre Report
     const handleShowGenre = () => {
         setShowGenre(true);
         setShowArtistListener(false);  // Ensure only one report is shown at a time
+        setShowArtistRankingReport(false); // Hide Artist Ranking Report
     };
 
     // Handle showing Artist/Listener Report
     const handleShowArtistListener = () => {
         setShowArtistListener(true);
         setShowGenre(false);  // Ensure only one report is shown at a time
+        setShowArtistRankingReport(false); // Hide Artist Ranking Report
+    };
+
+    // Handle showing Artist Ranking Report
+    const handleShowArtistRankingReport = () => {
+        setShowArtistRankingReport(true);
+        setShowGenre(false);  // Ensure only one report is shown at a time
+        setShowArtistListener(false); // Hide Artist/Listener Report
     };
 
     useEffect(() => {
@@ -58,9 +70,25 @@ const AnalyticsPage = () => {
             </div>
             {showGenre && <GenreReportPage />}
             {showArtistListener && <ArtistListenerReportPage />}
+
+            {false && <ArtistRankingReport />}
         </div>
 
     );
 };
+
+
+/*
+
+                <Button 
+                    className="cool-button" 
+                    variant="contained" 
+                    style={{
+                        backgroundColor: showArtistRankingReport ? '#bd6f77' : '#6f9bc9', // custom colors using hex codes
+                        color: '#fff' // setting text color to white
+                    }}
+                    onClick={handleShowArtistRankingReport}>
+                    Artist Ranking Report 
+                    </Button>*/
 
 export default AnalyticsPage;

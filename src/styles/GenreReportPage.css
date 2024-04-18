@@ -1,0 +1,82 @@
+.employee-dashboard-container {
+    max-width: 1200px; /* Limits the maximum width of the dashboard */
+    margin: auto; /* Center align the dashboard */
+    padding: 20px; /* Adds some padding around the dashboard content */
+    background: #f8f9fa; /* Light background for the dashboard */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.form-container {
+    margin-bottom: 20px; /* Adds bottom margin for spacing between sections */
+}
+
+.form-container form {
+    display: flex; /* Display form items in a row */
+    flex-wrap: wrap; /* Allow wrapping of form items */
+}
+
+.form-container label {
+    flex: 0 0 50%; /* Each label takes half of the container */
+    margin-bottom: 10px; /* Adds bottom margin to labels */
+    color: #333; /* Dark color for text */
+}
+
+.form-container button {
+    flex: 0 0 100%; /* Button takes full width of container */
+    padding: 8px; /* Padding inside button */
+    margin-top: 10px; /* Margin on top of button */
+    background-color: #bd6f77; /* Custom color for button */
+    color: white; /* White text color */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.form-container button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+.error-message {
+    color: #c82333; /* Bootstrap danger color for error messages */
+    margin-top: 5px; /* Margin on top of error messages */
+}
+
+.genre-graph-container {
+    margin-top: 20px; /* Adds top margin for spacing */
+}
+
+.genre-select-container {
+    margin-top: 20px; /* Adds top margin for spacing */
+}
+
+.genre-select-container label {
+    margin-right: 10px; /* Adds right margin to label */
+    color: #333; /* Dark color for text */
+}
+
+.genre-select-container select {
+    padding: 8px; /* Padding inside select */
+    border: 1px solid #ced4da; /* Bootstrap border color */
+    border-radius: 4px; /* Rounded borders */
+    background-color: white; /* White background */
+    color: #495057; /* Bootstrap text color */
+}
+
+.track-list-container {
+    margin-top: 20px; /* Adds top margin for spacing */
+}
+
+.track-list-container h2 {
+    margin-bottom: 10px; /* Adds bottom margin to header */
+    color: #333; /* Dark color for text */
+}
+
+.track-list-container ul {
+    list-style-type: none; /* Removes bullet points */
+    padding: 0; /* Removes default padding */
+}
+
+.track-list-container li {
+    margin-bottom: 5px; /* Adds bottom margin to list items */
+    color: #333; /* Dark color for text */
+}
