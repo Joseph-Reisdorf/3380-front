@@ -4,6 +4,7 @@
     padding: 20px; /* Adds some padding around the dashboard content */
     background: #f8f9fa; /* Light background for the dashboard */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+
 }
 
 .report-container {
@@ -12,9 +13,20 @@
 
 .report-container h2,
 .table-container h2 {
+
+    margin-top: 30px;
     margin-bottom: 15px; /* Space below the headers */
     color: #333; /* Dark color for text */
     font-size: 1.5em; /* Larger font size for headers */
+    
+}
+.report-container h3,
+.table-container h3 {
+    margin-top: 30px;
+    margin-bottom: 15px; /* Space below the headers */
+    color: #333; /* Dark color for text */
+    font-size: 1.5em; /* Larger font size for headers */
+    
 }
 
 .form label {
