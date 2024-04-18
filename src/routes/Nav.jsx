@@ -22,12 +22,13 @@ function Nav(){
                         <li><Link to="/playlists" className="playlist">Playlists</Link></li>
                         <li><Link to="/albums" className="albums">Albums</Link></li>
                         <li><Link to="/artists" className="artists">Artists</Link></li>
+                        <li><Link to="/analytics" className="departments">Analytics</Link></li>
                         </>
                     )}
                     {(userRole === 'a') && (
                         <li><Link to="/artist_dashboard" className="artist_dashboard">Dashboard</Link></li>
                     )}
-                    {(userRole === 'a' || userRole === 'l') && (
+                    {(userRole === 'a' || userRole === 'e') && (
                         <>
                         <li><Link to="/employee_dashboard" className="employee_dashboard">Dashboard</Link></li>
                         <li><Link to="/analytics" className="departments">Analytics</Link></li>

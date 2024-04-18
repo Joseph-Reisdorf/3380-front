@@ -37,7 +37,7 @@ const AnalyticsPage = () => {
     };
 
     useEffect(() => {
-        if (!loading && loggedIn && (userRole !== 'a' && userRole !== 'x')) {
+        if (!loading && loggedIn && (userRole !== 'a' && userRole !== 'e')) {
             navigate('/');  // Redirect if not authorized
         }
     }, [loggedIn, userRole, loading, navigate]);

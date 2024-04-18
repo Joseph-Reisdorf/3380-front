@@ -55,11 +55,7 @@ const EmployeeDashboardPage = () => {
         }
     }, [loggedIn, userRole, loading]);
 
-    useEffect(() => {
-        if (!loading && loggedIn) {
 
-        }
-    }, [loggedIn, loading]);
 
     return (
         <div>  
