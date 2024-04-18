@@ -1,0 +1,26 @@
+.analytics-buttons-container {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    gap: 20px; /* Adds space between buttons */
+    margin: 20px; /* Adds some space above the button container */
+    
+}
+
+.cool-button {
+    padding: 10px 20px; /* Add padding for larger, easier-to-click buttons */
+    font-size: 16px; /* Increase font size for better readability */
+    text-transform: uppercase; /* Capitalize button texts */
+    border-radius: 8px; /* Rounded corners for a smoother look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a 3D effect */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease; /* Smooth transition for interactions */
+}
+
+.cool-button:hover {
+    transform: translateY(-2px); /* Slightly raise the button when hovered */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover for a "lifting" effect */
+}
+
+.cool-button:active {
+    transform: translateY(1px); /* Slightly depress the button when clicked */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Less shadow to simulate being pressed down */
+}

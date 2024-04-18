@@ -23,7 +23,6 @@ import Player from './routes/playerPage';
 import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 import EmployeeDashboardPage from './routes/employeeOnly/employeeDashboardPage';
 import NotificationsPage from './routes/notificationPage';
-import CompanyInfo from './routes/employeeOnly/companyInfo';
 import AnalyticsPage from './routes/employeeOnly/analyticsPage';
 Axios.defaults.withCredentials = true;
 
@@ -56,7 +55,6 @@ export default function App() {
         <Route path="/playlists" element={<Playlist />} />
         <Route path="/employee_dashboard/*" element={<EmployeeDashboardPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/company_info" element={<CompanyInfo />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
       </Routes>
 

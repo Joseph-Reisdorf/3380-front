@@ -65,7 +65,7 @@ const AddDepartmentPage = ({ close }) => {
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
 
                     <form id="Add department" onSubmit={handleSubmit}>
-                        <h1>Add Department</h1>
+                        <h2>Add Department</h2>
                         {/* List of input fields using the same handleChange for all */}
                         <label >Department Name:</label>
                         <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />

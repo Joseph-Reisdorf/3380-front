@@ -1,0 +1,67 @@
+/* EmployeeDashboard.css - Ensure this file is imported in your EmployeesTable component file */
+
+.admin-dashboard-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.report-container {
+    margin-bottom: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-header {
+    background-color: #6f9bc9; /* Change this color to match your theme */
+    color: white;
+}
+
+.table-cell {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd; /* Subtle borders for each cell */
+    vertical-align: top;
+}
+
+.table-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-row:hover {
+    background-color: #ddd; /* Highlight on hover */
+}
+
+.table button {
+    padding: 5px 10px;
+    background-color: #bd6f77;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table button:hover {
+    background-color: #c82333; /* Darker red on hover for delete buttons */
+}
+
+/* Sticky table header */
+.table th {
+    position: sticky;
+    top: 0;
+    background-color: #6f9bc9;
+}
+
+/* Debugging Styling - Remove or hide in production */
+.debug-highlight {
+    border: 2px solid red;
+}

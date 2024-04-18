@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import AddEmployeePage from './addEmployee';
 import AddDepartmentPage from './addDepartment';
 import { useAuth } from '../../context/authContext';
+import CompanyInfoPage from './companyInfo';
 //import ReportsPage from './reportsPage';
 
 const EmployeeDashboardPage = () => {
@@ -47,7 +48,7 @@ const EmployeeDashboardPage = () => {
 
     useEffect(() => {
         if (!loading && loggedIn) {
-            const verifited = userRole === 'e' || userRole === 'a';
+            const verifited = userRole === 'e' || userRole === 'x';
             if (!verifited) {
                 navigate('/');
             }
@@ -63,10 +64,12 @@ const EmployeeDashboardPage = () => {
     return (
         <div>
             <h1>Employee Dashboard</h1>
+            <CompanyInfoPage/>
             <button onClick={handleShowAddEmployee}>Add Employee</button>
             <button onClick={handleShowAddDepartment}>Add Department</button>
             {showAddDepartment && <AddDepartmentPage close={handleClose} />}
             {showAddEmployee && <AddEmployeePage close={handleClose} />}
+            
         </div>
         
 

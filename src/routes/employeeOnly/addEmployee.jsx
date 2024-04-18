@@ -20,17 +20,19 @@ const AddEmployeePage = ( { close }) => {
         role: '',
         salary: '',
         hireDate: '',
-        managerId: ''
+        managerId: '',
+        isAdmin: false
     });
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, type, checked, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value  // Toggle between true and false correctly for checkboxes
         }));
+        console.log(formData);
     };
 
     const validateForm = () => {
@@ -46,8 +48,9 @@ const AddEmployeePage = ( { close }) => {
             setErrMsg("Invalid email format.");
             return false;
         }
-        if (formData.managerId === '' && formData.role !== 'x') {
+        if (formData.managerId === '' && formData.isAdmin == false) {
             setErrMsg("Manager ID is required.");
+
             return false;
         }
         
@@ -59,8 +62,8 @@ const AddEmployeePage = ( { close }) => {
 
         if (!validateForm()) return;
 
-        console.log("Submitting the following data:", formData);
         try {
+            
             const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/register/employee`, formData, {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
@@ -79,9 +82,11 @@ const AddEmployeePage = ( { close }) => {
                 role: '',
                 salary: '',
                 hireDate: '',
-                managerId: ''
+                managerId: '',
+                isAdmin: false
             });
             close();
+
         } catch (err) {
             setErrMsg('Failed to register. Please try again.');
             errRef.current.focus();
@@ -137,6 +142,8 @@ const AddEmployeePage = ( { close }) => {
                         <label htmlFor="managerId">Manager ID:</label>
                         <input type="text" id="managerId" name="managerId" value={formData.managerId} onChange={handleChange} />
 
+                        <label htmlFor="isAdmin">Admin Account:</label>
+                        <input type="checkbox" id="isAdmin" name="isAdmin" checked={formData.isAdmin} onChange={handleChange} />
                         <button type="submit">Register</button>
                     </form>
                 </section>
