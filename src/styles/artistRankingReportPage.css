@@ -1,0 +1,86 @@
+.admin-dashboard-container {
+    max-width: 1200px; /* Limits the maximum width of the report */
+    margin: auto; /* Center align the report */
+    padding: 20px; /* Adds some padding around the report content */
+    background: #f8f9fa; /* Light background for the report */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.admin-dashboard-container h2 {
+    margin-bottom: 15px; /* Space below the header */
+    color: #333; /* Dark color for text */
+    font-size: 1.5em; /* Larger font size for header */
+}
+
+.form-group label {
+    display: block; /* Makes label take the full width */
+    margin: 10px 0 5px; /* Spacing around labels */
+    color: #666; /* Dark grey color for label text */
+}
+
+.form-group input[type="date"],
+.form-group button {
+    width: 100%; /* Full width inputs and buttons */
+    padding: 8px; /* Padding inside inputs and buttons */
+    margin-top: 5px; /* Margin on top of inputs and buttons */
+    box-sizing: border-box; /* Border-box sizing to include padding in width */
+}
+
+.form-group button {
+    background-color: #bd6f77; /* Custom color for button */
+    color: white; /* White text color */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.form-group button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+.table-container {
+    overflow-x: auto; /* Enables horizontal scrolling if table overflows */
+}
+
+.table {
+    width: 100%; /* Full width table */
+    border-collapse: collapse; /* Collapses borders for a cleaner look */
+}
+
+.table thead {
+    background-color: #6f9bc9; /* Custom color for header */
+    color: white; /* White text for header */
+}
+
+.table th,
+.table td {
+    text-align: left; /* Aligns text to the left */
+    padding: 12px; /* Pads cells for spacing */
+    border: 1px solid #ddd; /* Light grey border for cells */
+}
+
+.table th {
+    position: sticky;
+    top: 0; /* Sticky header at the top */
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Zebra striping for rows */
+}
+
+.table tr:hover {
+    background-color: #ddd; /* Light grey background on row hover */
+}
+
+.table button {
+    padding: 5px 10px; /* Padding inside buttons */
+    background-color: #bd6f77; /* Custom color for delete buttons */
+    color: white; /* White text color for buttons */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded borders for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.table button:hover {
+    background-color: #c82333; /* Darker color on hover */
+}

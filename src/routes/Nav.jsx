@@ -8,6 +8,7 @@ import { faUser, faBell } from '@fortawesome/free-solid-svg-icons'; //for the us
 function Nav(){
     return(
         <nav>
+<<<<<<< Updated upstream
             <ul class="navbar">
                 {/* <li>
                     <Link to="/">
@@ -21,6 +22,30 @@ function Nav(){
                 <li><Link to="/albums" className="albums">Albums</Link></li>
                 <li><Link to="/artists" className="artists">Artists</Link></li>
                 <li><Link to="/artist_dashboard" className="artist_dashboard">Dashboard</Link></li>
+=======
+            <ul className="navbar">
+                <div className="nav-item">
+                    <li><Link to="/" className="home">Home</Link></li>
+                    {(userRole === 'l' || userRole === 'a') && (
+                        <>
+                        <li><Link to="/recents" className="recents">Recents</Link></li>
+                        <li><Link to="/library" className="library">Library</Link></li>
+                        <li><Link to="/playlists" className="playlist">Playlists</Link></li>
+                        <li><Link to="/albums" className="albums">Albums</Link></li>
+                        <li><Link to="/artists" className="artists">Artists</Link></li>
+                        </>
+                    )}
+                    {(userRole === 'a') && (
+                        <li><Link to="/artist_dashboard" className="artist_dashboard">Dashboard</Link></li>
+                    )}
+                    {(userRole === 'a' || userRole === 'x') && (
+                        <>
+                        <li><Link to="/employee_dashboard" className="employee_dashboard">Dashboard</Link></li>
+                        <li><Link to="/analytics" className="departments">Analytics</Link></li>
+                        </>
+                    )}
+
+>>>>>>> Stashed changes
 
  
                 <div class="search-container">
