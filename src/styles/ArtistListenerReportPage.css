@@ -11,6 +11,10 @@
     margin-bottom: 20px; /* Adds bottom margin for spacing between sections */
 }
 
+.report-container button {
+    margin: 10px 10px; /* Adds top margin for spacing between button and report */
+}
+
 .report-container h2,
 .table-container h2 {
 
