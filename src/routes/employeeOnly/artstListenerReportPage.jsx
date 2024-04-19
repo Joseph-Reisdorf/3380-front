@@ -21,7 +21,7 @@ const ArtistListenerReportPage = () => {
 
     useEffect(() => {
         if (!loading && loggedIn) {
-            const verified = userRole === 'e' || userRole === 'x';
+            const verified = userRole === 'a' || userRole === 'x';
             if (!verified) {
                 navigate('/');
             } else {
