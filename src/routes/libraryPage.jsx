@@ -82,17 +82,21 @@ function LibraryPage(){
     };
 
     const handlePlay = async (track) => {
-        try {
-            // Make a POST request to add the click
-            await axios.post(`${process.env.REACT_APP_BACK_URL}/clicks/add_clicks`, {
-                listen_to_listener_id: userId, // Current user ID
-                listen_to_track_id: track.track_id // Current playing track ID
-            });
-            setCurrent(track);
-        } catch (error) {
-            console.error("Error handling play:", error);
+        // Check if the play button is clicked directly, not triggered by the media player
+        if (track.track_id !== currentTrack?.track_id) {
+          try {
+            await axios.post(
+              "${process.env.REACT_APP_BACK_URL}/clicks/add_clicks/",{
+                listen_to_listener_id: userId,
+                listen_to_track_id: track.trackId
+            }
+            );
+          } catch (error) {
+            console.error("Error adding click:", error);
+          }
+          setCurrent(track);
         }
-    };
+      };
     
     console.log(userId)
     const [showModal, setShowModal] = useState(false);
