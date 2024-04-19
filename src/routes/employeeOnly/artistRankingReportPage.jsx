@@ -65,9 +65,10 @@ const ArtistReport = () => {
         try {
             const tracksData = await fetchArtistRankingByTracks(formattedStartDate, formattedEndDate);
             const albumsData = await fetchArtistRankingByAlbums(formattedStartDate, formattedEndDate);
+            const listensData = await fetchArtistRankingByListens(formattedStartDate, formattedEndDate);
 
             // Set the report data
-            setReportData({ tracks: tracksData, albums: albumsData });
+            setReportData({ tracks: tracksData, albums: albumsData , listens: listensData});
         } catch (error) {
             console.error('Error fetching artist ranking report:', error);
         }
@@ -149,7 +150,7 @@ const ArtistReport = () => {
                     </table>
                 </div>
             )}
-            {/* {reportData.albums && (
+            {reportData.albums && (
                 <div className="table-container">
                     <h3>Aritst Ranking By Songs Played</h3>
                     <table className="table">
@@ -173,7 +174,7 @@ const ArtistReport = () => {
                         </tbody>
                     </table>
                 </div>
-            )} */}
+            )}
         </div>
     );
 };
