@@ -20,7 +20,7 @@ const GenreReportPage = () => {
     useEffect(() => {
         const fetchGenres = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_genres`);
+                const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genre/get_genres`);
                 setGenres(response.data);
             } catch (error) {
                 console.error('Error fetching genres:', error);
@@ -31,12 +31,14 @@ const GenreReportPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = endDate.toISOString().split('T')[0];
         if (new Date(endDate) < new Date(startDate)) {
             setErrorMessage('End date cannot be before start date.');
             return;
         }
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_most_listened_genres`, {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genre/get_most_listened_genres/${selectedGenre}/${formattedStartDate}/${formattedEndDate}`, {
                 params: { startDate, endDate }
             });
             setGenreData(response.data);
@@ -50,9 +52,11 @@ const GenreReportPage = () => {
     const handleGenreChange = async (event) => {
         const selectedGenre = event.target.value;
         setSelectedGenre(selectedGenre);
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = endDate.toISOString().split('T')[0];
     
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_most_listened_songs_by_genre`, {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genre/get_most_listened_songs_by_genre${formattedStartDate}/${formattedEndDate}`, {
                 params: { selectedGenre, startDate, endDate }
             });
             setTracks(response.data);
