@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 
+import { Card, CardContent, CardMedia, Typography, Grid, Container } from '@mui/material';
+
 const Album = () => {
   const [albums, setAlbums] = useState([]);
   const { loggedIn, userRole, loading } = useAuth();
@@ -22,48 +24,75 @@ const Album = () => {
 
   }, [loggedIn, userRole, loading, navigate]); // Depend on isArtist to reactively navigate
 
-  useEffect(() => {
 
-    const fetchAlbumsAndArtists = async () => {
+  useEffect(() => {
+    const fetchAlbumsAndDetails = async () => {
       try {
         const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/get_albums`);
         const albumsData = res.data;
 
-        const fetchArtistPromises = albumsData.map((album) =>
-          axios.get(`${process.env.REACT_APP_BACK_URL}/artists/find_artist_by_id/${album.album_primary_artist_id}`)
-            .then(artistRes => {
-              album.artistName = artistRes.data.artist_display_name; 
-            })
-            .catch(error => {
-              console.error('Error fetching artist', error);
-              album.artistName = 'Unknown Artist'; 
-            
-            })
-        );
+        const albumsDetailsPromises = albumsData.map(async (album) => {
+          const [tracksRes, coverRes, artistRes] = await Promise.all([
+            axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${album.album_id}`),
+            axios.get(`${process.env.REACT_APP_BACK_URL}/albums/cover/${album.album_id}`, { responseType: 'blob' })
+          ]);
 
-        await Promise.all(fetchArtistPromises); 
-        
-        setAlbums(albumsData); 
-        
+          return {
+            ...album,
+            tracks: tracksRes.data,
+            coverUrl: URL.createObjectURL(coverRes.data)
+          };
+        });
+
+        const albumsCompleteDetails = await Promise.all(albumsDetailsPromises);
+        setAlbums(albumsCompleteDetails);
+        console.log(albums);
       } catch (error) {
-        console.error('Failed to fetch albums', error);
+        console.error('Failed to fetch albums and their details', error);
       }
     };
 
-    fetchAlbumsAndArtists();
-  }, []);
+    fetchAlbumsAndDetails();
 
+  }, []);
+ 
   return (
-    <div>
-      <h1>Albums</h1>
-      {albums.map((a) => (
-        <div className="album" key={a.album_id}>
-          <h3>Name: <Link to={`/album/${a.album_id}`}>{a.album_title}</Link></h3>
-          <p>Release Date: {a.album_release_date}</p>
-          <p>Artist: <Link to={`/artist/${a.album_primary_artist_id}`}>{a.artistName}</Link></p>
-        </div>
-      ))}
-    </div>
+    <Container sx={{ marginTop: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Albums
+      </Typography>
+      <Grid container spacing={4}>
+        {albums.map(album => (
+          <Grid item key={album.album_id} xs={12} sm={6} md={4}>
+            <Card>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  <Link to={`/album/${album.album_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {album.album_title}
+                  </Link>
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Release Date: {album.album_release_date.slice(0,10 )}
+                </Typography>
+                <Card>
+                  <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Tracks: {album.artist_display_name}
+                    </Typography>
+                    {album.tracks.length > 0 ? (album.tracks.map(track => (
+                      <Typography key={track.track_id} variant="body2" color="textSecondary" component="p">
+                        {track.track_name}
+                      </Typography>
+                    ))) : <Typography variant="body2" color="textSecondary" component="p">No tracks found</Typography>}
+                  </CardContent>
+                </Card>
+
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 };
 

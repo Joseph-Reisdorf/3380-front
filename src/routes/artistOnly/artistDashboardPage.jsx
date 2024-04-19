@@ -4,163 +4,167 @@ import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 import AddAlbumPage from './addAlbumPage';
 import AddTrackPage from './addTrackPage';
-
+import {
+    Paper, Button, Typography, Table, TableBody, TableCell,
+    TableContainer, TableHead, TableRow, TablePagination
+} from '@mui/material';
 const ArtistDashboardPage = () => {
 
     const { loggedIn, userId, userRole, loading } = useAuth();
-    const [gotAlbums, setGotAlbums] = useState(false);
-    const [addingAlbum, setAddingAlbum] = React.useState(false);
-    const [addingTrack, setAddingTrack] = React.useState(false);
-    const [followerCount, setFollowerCount] = useState(0);
-    const [gotFollowerCount, setGotFollowerCount] = useState(false);
-
     const navigate = useNavigate();
-
-
-    const [albums, setAlbums] = React.useState([]);
-    const [artist, setArtist] = React.useState({});
-
-    // If not an artist, redirect to login page
-    useEffect(() => {
-        if (!loading) {
-            if (!loggedIn) {
-                navigate('/login');
-            }
-            else if (userRole !== 'a') {
-                navigate('/');
-            }
-        }
-
-    }, [loggedIn, userRole, loading, navigate]); // Depend on isArtist to reactively navigate
-  
-    // get artist by id
-    useEffect(() => {
-        if (userId && loggedIn && !loading) {
-            const fetchArtist = async () => {
-                try {
-                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/find_artist_by_id/${userId}`);
-                    setArtist(res.data);
-                } catch (error) {
-                    console.error(error);
-            }
-            };
-            fetchArtist();
-        };  
-    }, [userId, loggedIn, loading]);
+    const [albums, setAlbums] = useState([]);
+    const [followerCount, setFollowerCount] = useState(0);
+    const [genres, setGenres] = useState([]);
+    const [addingAlbum, setAddingAlbum] = useState(false);
+    const [addingTrack, setAddingTrack] = useState(false);
     
-    // get album list by primary_artist_id
-    useEffect(() => {
-        if (userId && loggedIn && !loading) {
-            const fetchAlbums = async () => {
-                try {
-                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${userId}`);
-                    setAlbums(res.data);
 
-                    setGotAlbums(true);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-            fetchAlbums();
+    // Combined useEffect for authentication and data fetching
+    useEffect(() => {
+        if (loading) return; // Wait until loading is false to proceed
+
+        if (!loggedIn || userRole !== 'a') {
+            navigate(userRole !== 'a' ? '/' : '/login');
+            return;
         }
 
-    }, [userId, loggedIn, loading]);
+        if (userId) {
+            axios.get(`${process.env.REACT_APP_BACK_URL}/artists/find_artist_by_id/${userId}`)
+                .then(res => {
+                    const artist = res.data;
+                    return axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${userId}`);
+                })
+                .then(res => {
+                    const albumsData = res.data;
+                    return Promise.all(albumsData.map(album => 
+                        axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${album.album_id}`)
+                            .then(trackRes => ({ ...album, tracks: trackRes.data, page: 0, rowsPerPage: 5 }))
+                            .catch(() => ({ ...album, tracks: [], page: 0, rowsPerPage: 5 }))
+                    ));
+                })
+                .then(albumsWithTracks => {
+                    setAlbums(albumsWithTracks);
+                })
+                .catch(error => console.error('Error loading data:', error));
+            axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_likes_count/${userId}`)
+                .then(res => setFollowerCount(res.data.likes))
+                .catch(error => console.error('Error loading follower count:', error));
+            axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_genres`)
+                .then(res => setGenres(res.data))
+                .catch(error => console.error('Error loading genres:', error));
+            
+        }
+    }, [userId, loggedIn, userRole, loading, navigate]);
 
-    // get tracks for each album
+
     useEffect(() => {
         if (albums.length > 0) {
-            const fetchTracks = async () => {
-                const albumsWithTracks = await Promise.all(albums.map(async (album) => {
-                    try {
-                        const trackRes = await axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${album.album_id}`);
-                        return { ...album, tracks: trackRes.data };  // Append tracks to the album object
-                    } catch (error) {
-                        console.error('Error fetching tracks for album:', album.album_id, error);
-                        return { ...album, tracks: [] };  // Ensure tracks is an empty array if the fetch fails
-                    }
-                }));
-                setAlbums(albumsWithTracks);  // Update the albums state with the new data
-            };
-            fetchTracks();
+            console.log(albums);
         }
-    }, [gotAlbums]);
+    }, [albums]);
 
-    // get follower account by artist_id
     useEffect(() => {
-        if (loggedIn && !loading) {
-            const fetchFollowerCount = async () => {
-                try {
-                    const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_likes_count/${userId}`);
-                    setFollowerCount(res.data.likes);
-                    setGotFollowerCount(true);
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-            fetchFollowerCount();
+        if (genres.length > 0) {
+            console.log(genres);
         }
+    }, [genres]);
 
-    }, [userId, loggedIn, loading]);
-    /*useEffect(() => {
-        const fetchTracks = async () => {
-            const fetchTrackPromises = albums.map((album) =>
-                axios.get(`${process.env.REACT_APP_BACK_URL}/tracks/get_tracks_by_album/${album.album_id}`)
-                    .then(trackRes => {
-                        album.tracks = trackRes.data;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching tracks', error);
-                        album.tracks = [];
-                    })
-                    
-            );
+    const handleChangePage = (event, newPage, albumId) => {
+        setAlbums(prevAlbums =>
+            prevAlbums.map(album =>
+                album.album_id === albumId ? { ...album, page: newPage } : album
+            )
+        );
+    };
 
-            await Promise.all(fetchTrackPromises);
-        };
-        fetchTracks();
-    }, [albums]);*/
-
+    const handleChangeRowsPerPage = (event, albumId) => {
+        const rowsPerPage = parseInt(event.target.value, 10);
+        setAlbums(prevAlbums =>
+            prevAlbums.map(album =>
+                album.album_id === albumId ? { ...album, rowsPerPage, page: 0 } : album
+            )
+        );
+    };
 
     return (
-        <div>
-                <div>
-                    <h1>Artist Dashboard - {artist && artist.artist_display_name}</h1>
-                </div>
-
-                <div className="Follower count:">
-                    <p>Follower Count: <strong>{followerCount}</strong></p>
-                </div>
-                { /* Display albums if there are any */ }
-                <div>
-                    <h2>Albums</h2>
-                    <ul>
+        <Paper className="admin-dashboard-container">
+            <Typography variant="h4" component="h1" className="dashboard-title">
+                Artist Dashboard
+            </Typography>
+            <Typography variant="h6" component="h3" className="dashboard-subtitle">
+                Follower Count: {followerCount || 0}
+            </Typography>
+            <TableContainer component={Paper} className='table'>
+                <Table aria-label="albums table">
+                    <TableHead className='thead'>
+                        <TableRow>
+                            <TableCell >Title</TableCell>
+                            <TableCell>Description</TableCell>
+                            <TableCell>Release Date</TableCell>
+                            <TableCell>Tracks</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
                         {albums.map((album) => (
-                            <li key={album.album_id}>
-                                <h3>{album.album_title}</h3>
-                                <p>Description: {album.album_description}</p>
-                                <p>Release Date: {album.album_release_date.slice(0, 10)}</p>
-                                <p>Tracks:</p>
-                                <ol>
-                                    {album.tracks && album.tracks.map(track => (
-                                        <li key={track.track_id}>{track.track_name}</li>
-                                    ))}
-                                </ol>
-                            </li>
+                            <TableRow key={album.album_id} className='table-row'>
+                                <TableCell>{album.album_title}</TableCell>
+                                <TableCell>{album.album_description}</TableCell>
+                                <TableCell>{album.album_release_date.slice(0, 10)}</TableCell>
+                                <TableCell>
+                                    <TableContainer component={Paper} className="table">
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Track Name</TableCell>
+                                                    <TableCell>Release Date</TableCell>
+                                                    <TableCell>Genre</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {album.tracks.slice(album.page * album.rowsPerPage, (album.page + 1) * album.rowsPerPage).map(track => (
+                                                    <TableRow key={track.track_id}>
+                                                        <TableCell>{track.track_name}</TableCell>
+                                                        <TableCell>{track.track_release_date.slice(0,10)}</TableCell>
+                                                        
+                                                        <TableCell>
+                                                            {Array.isArray(genres) && genres.length > 0 ? (
+                                                                genres.find(genre => genre.genre_id === track.track_genre)?.genre_name || 'Unknown Genre'
+                                                            ) : (
+                                                                track.track_genre || 'No Genre Info'
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                        <TablePagination
+                                            rowsPerPageOptions={[3, 10]}
+                                            component="div"
+                                            count={album.tracks.length}
+                                            rowsPerPage={album.rowsPerPage}
+                                            page={album.page}
+                                            onPageChange={(e, newPage) => handleChangePage(e, newPage, album.album_id)}
+                                            onRowsPerPageChange={(e) => handleChangeRowsPerPage(e, album.album_id)}
+                                        />
+                                    </TableContainer>
+                                </TableCell>
+                            </TableRow>
                         ))}
-                    </ul>
-
-                </div>
-
-                { /* Conditionally rended based on button click */ }
-                <div>
-                    <button onClick={() => setAddingAlbum(!addingAlbum)}>Add Album</button>
-                    <button onClick={() => setAddingTrack(!addingTrack)}>Add Track</button>
-                </div>
-                {addingAlbum && <AddAlbumPage />}
-                {addingTrack && <AddTrackPage albums={albums} />}
-        </div>
-
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <div className='report-container'>
+                <Button variant="contained" onClick={() => setAddingAlbum(!addingAlbum)} className="button">
+                    Add Album
+                </Button>
+                <Button variant="contained" onClick={() => setAddingTrack(!addingTrack)} className="button">
+                    Add Track
+                </Button>
+                {addingTrack && <AddTrackPage albums={albums} open={addingTrack} onClose={() => setAddingTrack(false)} />}
+                {addingAlbum && <AddAlbumPage open={addingAlbum} onClose={() => setAddingAlbum(false)} />}
+            </div>
+        </Paper>
     );
-}
+};
 
 export default ArtistDashboardPage;

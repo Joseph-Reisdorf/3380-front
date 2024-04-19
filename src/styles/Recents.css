@@ -1,0 +1,66 @@
+/* LibraryPage.css */
+.library-container {
+    padding: 20px;
+    margin: auto;
+    max-width: 1200px;
+}
+
+.track-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.track-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.track-details {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.track-name {
+    font-size: 1.2em;
+    color: #333;
+    font-weight: bold;
+}
+
+.track-info {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.track-actions {
+    display: flex;
+    align-items: center;
+}
+
+.track-action-button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.track-action-button:hover {
+    background-color: #45a049;
+}
+
+.track-link {
+    text-decoration: none;
+    color: #0645AD;
+}
+
+.track-link:hover {
+    text-decoration: underline;
+}
