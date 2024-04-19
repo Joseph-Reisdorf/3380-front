@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/authContext';
-import GenreGraph from './GenreGraph'; // Import GenreGraph component
+import GenreGraph from './GenreGraph';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../../styles/GenreReportPage.css'; // Import the CSS file
+import '../../styles/GenreReportPage.css';
 
 const GenreReportPage = () => {
     const { userId, userRole, loading } = useAuth();
@@ -22,13 +22,11 @@ const GenreReportPage = () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_genres`);
                 setGenres(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching genres:', error);
             }
         };
         fetchGenres();
-        console.log("fetching genres");
     }, [userId, userRole, loading]);
 
     const handleSubmit = async (event) => {
@@ -39,14 +37,9 @@ const GenreReportPage = () => {
         }
         try {
             const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_most_listened_genres`, {
-                params: {
-                    selectedGenre,
-                    startDate,
-                    endDate
-                }
+                params: { startDate, endDate }
             });
             setGenreData(response.data);
-            console.log(response.data);
             setErrorMessage('');
         } catch (error) {
             console.error('Error fetching most listened genres:', error);
@@ -55,25 +48,21 @@ const GenreReportPage = () => {
     };
 
     const handleGenreChange = async (event) => {
-
-        setSelectedGenre(event.target.value);
+        const selectedGenre = event.target.value;
+        setSelectedGenre(selectedGenre);
     
         try {
             const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_most_listened_songs_by_genre`, {
-                params: {
-                    selectedGenre,
-                    startDate,
-                    endDate
-                }
+                params: { selectedGenre, startDate, endDate }
             });
             setTracks(response.data);
-            console.log(response.data);
             setErrorMessage('');
         } catch (error) {
             console.error('Error fetching top tracks by genre:', error);
             setErrorMessage('An error occurred while fetching data.');
         }
     };
+    
 
     return (
         <div className="employee-dashboard-container">
@@ -114,7 +103,7 @@ const GenreReportPage = () => {
                 </div>
             )}
             <div className="genre-select-container">
-                <label >Select Genre:</label>
+                <label>Select Genre:</label>
                 <select
                     value={selectedGenre}
                     onChange={handleGenreChange}
@@ -122,7 +111,7 @@ const GenreReportPage = () => {
                 >
                     <option value="">Select Genre</option>
                     {genres.map((genre) => (
-                        <option key={genre.genre_index} value={genre.genre_id}>{genre.genre_name}</option>
+                        <option key={genre.genre_id} value={genre.genre_id}>{genre.genre_name}</option>
                     ))}
                 </select>
             </div>
