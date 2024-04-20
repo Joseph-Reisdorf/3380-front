@@ -69,7 +69,7 @@ const CreateAccount = () => {
         e.preventDefault();
 
         // Validate middle initial to be a single letter
-        const middleInitialRegex = /^([A-Z]|)$/;
+        const middleInitialRegex = /^([A-Z]|[a-z]|)$/;
         if (!middleInitialRegex.test(middleInitial)) {
             setErrMsg("Middle initial must be a single letter of the alphabet.");
             return;
