@@ -9,6 +9,8 @@ const ClicksDashboard = () => {
     const [selectedAlbum, setSelectedAlbum] = useState('');
     const [trackClicks, setTrackClicks] = useState([]);
     const [albumTitles, setAlbumTitles] = useState([]);
+    const [rowsPerPage, setRowsPerPage] = useState(10); // Default rows per page
+    const [currentPage, setCurrentPage] = useState(1);
     const { userId } = useAuth();
 
     const fetchTrackReport = async () => {
@@ -74,6 +76,29 @@ const ClicksDashboard = () => {
         }
         return { playCountMap, topListenerMap };
     };
+
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setCurrentPage(1); // Reset to first page when changing rows per page
+    };
+
+    const handlePageChange = (event, newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const isNextButtonDisabled = () => {
+        const totalItems = trackClicks.data ? trackClicks.data.length : 0;
+        const totalPages = Math.ceil(totalItems / rowsPerPage);
+        return currentPage === totalPages || totalItems === 0;
+    };
+
+    const lastIndex = currentPage * rowsPerPage;
+    const firstIndex = lastIndex - rowsPerPage;
+    const currentRows = trackClicks.data?.slice(firstIndex, lastIndex);
+
+    
+
     
     
     const { playCountMap, topListenerMap } = countTrackPlays();
@@ -143,7 +168,7 @@ const ClicksDashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(trackClicks.data) && trackClicks.data.map((listen_to) => (
+                        {Array.isArray(currentRows) && currentRows.map((listen_to) => (
                             <tr className="table-row" key={listen_to.listen_to_id}>
                                 <td className="table-cell">{listen_to.listen_to_datetime.substring(0, 10)}</td>
                                 <td className="table-cell">{listen_to.track_name}</td>
@@ -154,6 +179,35 @@ const ClicksDashboard = () => {
                     </tbody>
                 </table>
             </div>
+            <div className="rows-per-page-selector">
+                    <label htmlFor="rowsPerPage">Rows per page:</label>
+                    <select
+                        id="rowsPerPage"
+                        value={rowsPerPage}
+                        onChange={handleChangeRowsPerPage}
+                    >
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                    </select>
+                </div>
+                <div className="pagination-container">
+                    <button
+                        className="pagination-button"
+                        onClick={(event) => handlePageChange(event, currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span>{currentPage}</span>
+                    <button
+                        className="pagination-button"
+                        onClick={(event) => handlePageChange(event, currentPage + 1)}
+                        disabled={isNextButtonDisabled()}
+                    >
+                        Next
+                    </button>
+                </div>
             <div className="table-container">
                 <h1>Track Play Count</h1>
                 <table className="table">
