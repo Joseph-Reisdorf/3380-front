@@ -24,6 +24,7 @@ import ArtistDashboardPage from './routes/artistOnly/artistDashboardPage';
 import EmployeeDashboardPage from './routes/employeeOnly/employeeDashboardPage';
 import NotificationsPage from './routes/notificationPage';
 import AnalyticsPage from './routes/employeeOnly/analyticsPage';
+import ClicksDashboard from './routes/artistOnly/clicksDashboard';
 Axios.defaults.withCredentials = true;
 
 export default function App() {
@@ -56,6 +57,7 @@ export default function App() {
         <Route path="/employee_dashboard/*" element={<EmployeeDashboardPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/clicks_dashboard" element={<ClicksDashboard />} />
       </Routes>
 
       <footer>

@@ -12,6 +12,7 @@ function Player() {
   const [blobUrl, setBlobUrl] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [hasBeenPlayed, setHasBeenPlayed] = useState(false);
+  const [playedFromPlayer, setPlayedFromPlayer] = useState(false);
 
   const { loggedIn, userId, userRole, loading } = useAuth();
 
@@ -42,16 +43,27 @@ function Player() {
           }
 
           const blob = new Blob([response.data], { type: 'audio/mpeg' });
-          setBlobUrl(URL.createObjectURL(blob));
-        } catch (error) {
-          console.error("Error fetching blob URL:", error);
-          setBlobUrl('');
-        } finally {
-          setIsLoading(false);
-        }
-      };
+        setBlobUrl(URL.createObjectURL(blob));
 
-      fetchBlobUrl();
+       
+        if (!playedFromPlayer && !loading && userId) {
+          await axios.post(
+            `${process.env.REACT_APP_BACK_URL}/clicks/add_clicks/`,
+            {
+              listen_to_listener_id: userId,
+              listen_to_track_id: currentTrack.track_id
+            }
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching blob URL:", error);
+        setBlobUrl('');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlobUrl();
     }
     return () => setHasBeenPlayed(false);
   }, [currentTrack]);
@@ -97,7 +109,10 @@ function Player() {
           <AudioPlayer
             volume="0.5"
             src={blobUrl}
-            onPlay={handlePlay}
+            onPlay={() => {
+              setPlayedFromPlayer(true); // Set flag when played from player
+              handlePlay();
+            }}
             showSkipControls={false} // Assuming no skipping if single track handling
             onError={(e) => {
               console.error("Audio player error:", e);

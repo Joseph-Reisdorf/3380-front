@@ -160,6 +160,11 @@ const ArtistDashboardPage = () => {
                 <Button variant="contained" onClick={() => setAddingTrack(!addingTrack)} className="button">
                     Add Track
                 </Button>
+                <Link to="/clicks_dashboard" className="button">
+                    <Button variant="contained">
+                        Clicks Dashboard
+                    </Button>
+                </Link>
                 {addingTrack && <AddTrackPage albums={albums} open={addingTrack} onClose={() => setAddingTrack(false)} />}
                 {addingAlbum && <AddAlbumPage open={addingAlbum} onClose={() => setAddingAlbum(false)} />}
             </div>
