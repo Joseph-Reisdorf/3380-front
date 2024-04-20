@@ -41,10 +41,6 @@ function Nav(){
                     <div className="search-container">
                         {(userRole === 'l' || userRole === 'a') && (
                             <>
-                                <form action="/search">
-                                <input type="text" placeholder="Search.." name="search"></input>
-                                <button type="submit">Search</button>
-                                </form>
         
                                 {/*<Link to="/account" className="icon-link">
                                     <FontAwesomeIcon icon={faUser} />
@@ -66,3 +62,8 @@ function Nav(){
 };
 
 export default Nav;
+/*
+                                <form action="/search">
+                                <input type="text" placeholder="Search.." name="search"></input>
+                                <button type="submit">Search</button>
+                                </form> */

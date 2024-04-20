@@ -7,8 +7,21 @@ const AddTrackPage = ( {albums} ) => {
     const { loggedIn, loading, userId } = useAuth();
     const [albumNames, setAlbumNames] = useState([]);
     const [file, setFile] = useState(null);
-
+    const [genres, setGenres] = useState([]);
   
+    useEffect(() => {
+        if (!loading && loggedIn) {
+            axios.get(`${process.env.REACT_APP_BACK_URL}/genres/get_genres`)
+                .then((response) => {
+                    setGenres(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching genres:', error);
+                });
+        }
+    }, [loggedIn, loading]);
+
+
     const [track, setTrack] = useState({
         track_album_id: "",
         track_name: "",
@@ -91,7 +104,12 @@ const AddTrackPage = ( {albums} ) => {
                 </div>
                 <div>
                     <label >Genre:</label>
-                    <input type="number" name="track_genre" onChange={handleChange} required />
+                    <select name="track_genre" onChange={handleChange} required>
+                        <option value="" disabled selected>Select Genre</option>
+                        {genres.map((g) => (
+                            <option value={g.genre_id}>{g.genre_name}</option>
+                        ))}
+                    </select>
                 </div>
                 <div>
                     <label >Release Date:</label>

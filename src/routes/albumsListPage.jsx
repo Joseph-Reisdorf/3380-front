@@ -67,9 +67,7 @@ const Album = () => {
             <Card>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
-                  <Link to={`/album/${album.album_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     {album.album_title}
-                  </Link>
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   Release Date: {album.album_release_date.slice(0,10 )}

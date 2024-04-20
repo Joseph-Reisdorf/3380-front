@@ -3,11 +3,13 @@ import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+import { Container, TextField, Button, Paper, Typography, Checkbox, FormControlLabel, Alert } from '@mui/material';
+
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@company\.com|central\.company\.com$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const AddEmployeePage = ( { close }) => {
-    const errRef = useRef();
+    const errRef = useRef(null);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -92,64 +94,37 @@ const AddEmployeePage = ( { close }) => {
             errRef.current.focus();
         }
     };
-
     return (
-        <div className="create-account-container">
-            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+        <Container component="main" maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+            <Typography variant="h4" gutterBottom>Register Employee</Typography>
             {success ? (
-                <section>
-                    <h1>Success!</h1>
-                    <p><Link to="/login">Sign in</Link></p>
-                </section>
+                <Alert severity="success">
+                    <Typography>Success!</Typography>
+                    <Link to="/login">Sign in</Link>
+                </Alert>
             ) : (
-                <section>
-                    <form id="registerEmployeeForm" onSubmit={handleSubmit}>
-                        <h1>Register Employee</h1>
-                        {/* List of input fields using the same handleChange for all */}
-                        <label htmlFor="firstName">First Name:</label>
-                        <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
+                <form onSubmit={handleSubmit}>
+                    {errMsg && <Alert severity="error" ref={errRef}>{errMsg}</Alert>}
+                    <TextField fullWidth margin="normal" label="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Middle Initial" name="middleInitial" value={formData.middleInitial} inputProps={{ maxLength: 1 }} onChange={handleChange} />
+                    <TextField fullWidth margin="normal" label="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Email" type="email" name="email" value={formData.email} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Password" type="password" name="pwd" value={formData.pwd} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Confirm Password" type="password" name="confirmPwd" value={formData.confirmPwd} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Birthdate" type="date" name="birthdate" value={formData.birthdate} InputLabelProps={{ shrink: true }} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Department ID" name="department" value={formData.department} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Role" name="role" value={formData.role} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Salary" type="number" name="salary" value={formData.salary} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Hire Date" type="date" name="hireDate" value={formData.hireDate} InputLabelProps={{ shrink: true }} onChange={handleChange} required />
+                    <TextField fullWidth margin="normal" label="Manager ID" name="managerId" value={formData.managerId} onChange={handleChange} />
+                    <FormControlLabel control={<Checkbox checked={formData.isAdmin} onChange={handleChange} name="isAdmin" />} label="Admin Account" />
+                    <Button type="submit" variant="contained" color="primary">Register</Button>
 
-                        <label htmlFor="middleInitial">Middle Initial:</label>
-                        <input type="text" id="middleInitial" name="middleInitial" value={formData.middleInitial} maxLength="1" onChange={handleChange} />
-
-                        <label htmlFor="lastName">Last Name:</label>
-                        <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
-
-                        <label htmlFor="email">Email:</label>
-                        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-
-                        <label htmlFor="password">Password:</label>
-                        <input type="password" id="password" name="pwd" value={formData.pwd} onChange={handleChange} required />
-
-                        <label htmlFor="confirmPwd">Confirm Password:</label>
-                        <input type="password" id="confirmPwd" name="confirmPwd" value={formData.confirmPwd} onChange={handleChange} required />
-
-                        <label htmlFor="birthdate">Birthdate:</label>
-                        <input type="date" id="birthdate" name="birthdate" value={formData.birthdate} onChange={handleChange} required />
-
-                        <label htmlFor="department">Department ID:</label>
-                        <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} required />
-
-                        <label htmlFor="role">Role:</label>
-                        <input type="text" id="role" name="role" value={formData.role} onChange={handleChange} required />
-
-                        <label htmlFor="salary">Salary:</label>
-                        <input type="number" id="salary" name="salary" value={formData.salary} onChange={handleChange} required />
-
-                        <label htmlFor="hireDate">Hire Date:</label>
-                        <input type="date" id="hireDate" name="hireDate" value={formData.hireDate} onChange={handleChange} required />
-
-                        <label htmlFor="managerId">Manager ID:</label>
-                        <input type="text" id="managerId" name="managerId" value={formData.managerId} onChange={handleChange} />
-
-                        <label htmlFor="isAdmin">Admin Account:</label>
-                        <input type="checkbox" id="isAdmin" name="isAdmin" checked={formData.isAdmin} onChange={handleChange} />
-                        <button type="submit">Register</button>
-                    </form>
-                </section>
+                </form>
             )}
-
-        </div>
+        </Paper>
+        </Container>
     );
 };
 

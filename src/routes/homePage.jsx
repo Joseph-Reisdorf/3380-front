@@ -1,8 +1,9 @@
+
 import {React, useEffect, useState} from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
-
+import { usePlaylist } from "../context/playlistContext";
 import "../styles/homePage.css";
 import PopUp from "./popUp";
 
@@ -13,7 +14,7 @@ function Home() {
 
   const [showPopup, setShowPopup] = useState(false); //For popup
   const [followerAlert, setFollowerAlert] = useState([]); 
-
+  const [name, setName] = useState(null); //For popup
   const { loggedIn, userRole, userId, logout, loading } = useAuth();
   
   const getRoleName = (role) => {
@@ -26,6 +27,23 @@ function Home() {
     }
   };
  
+  useEffect(() => {
+    if (!loading && loggedIn) {
+      
+      
+      async function fetchName() {
+        if (loggedIn && userId) {
+          try {
+            const res = await axios.get(`${process.env.REACT_APP_BACK_URL}/debug_person/get_person_name_by_id/${userId}`);
+            setName(res.data);
+          } catch (err) {
+            console.error("Failed to fetch artist name:", err);
+          }
+        }
+      }
+      fetchName();
+    }
+  }, [loggedIn, loading, userId]);
 
   useEffect(() => {
     async function fetchFollowerAlerts() {
@@ -92,21 +110,27 @@ function Home() {
       <p>In addition to this we are tasked with implementing the actual hosting of a platform similar to many online streaming services.</p>
       
       
-        <div className="login-homepage"> 
-          <p className="login-explain">Our website is made for artists of UH. To recieve the ability to be an artist you must be the owner of a @cougarnet.uh.edu or @uh.edu email domain. Listeners who wish to support UH artists may register with any email domain, and will given access to the music on the site.</p>
+      <div className="login-homepage"> 
+        <p className="login-explain">Our website is made for artists of UH. To recieve the ability to be an artist you must be the owner of a @cougarnet.uh.edu or @uh.edu email domain. Listeners who wish to support UH artists may register with any email domain, and will given access to the music on the site.</p>
 
-          {!loggedIn && (
-            <div className="login-links">
-              <Link className="login-link" to="/register">Register</Link>
-              <Link className="login-link" to="/login">Login</Link>
-            </div>
-          )}
-          {loggedIn && 
-              <button className="logout-button" onClick={logout}>Logout</button>
+        
+        {!loggedIn && (
+          <div className="login-links">
+            <Link className="login-link" to="/register">Register</Link>
+            <Link className="login-link" to="/login">Login</Link>
+          </div>
+        )}
+
+
+        {(loggedIn && name != null) &&
+          <div >
+            <p>Logged in as: <strong>{name.person_first_name} {name.person_last_name}</strong></p>
+            <p>Role: <strong>{getRoleName(userRole)}</strong></p>
+            <button className="logout-button" onClick={logout}>Logout</button>
+          </div>
           }
-        {loggedIn && 
-        <p className="login-explain">Logged in as <strong>{getRoleName(userRole)}</strong></p>}
-        </div>
+      </div>
+
     </div>
   );
 }

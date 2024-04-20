@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/authContext';
-
+import { Typography, Paper, Container, FormControl, TextField, Button, Select, MenuItem, InputLabel } from '@mui/material';
 
 const AddDepartmentPage = ({ close }) => {
 
@@ -43,7 +43,24 @@ const AddDepartmentPage = ({ close }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        if (!validateForm()) {
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_BACK_URL}/departments/add_department`, formData);
+                
+                if (res.status === 200) {
+                    setSuccess(true);
+                    setErrMsg('Department added successfully.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                setErrMsg("Failed to add department.");
+
+            }
+        }
+        else {
+            setErrMsg("Failed to add department.");
+        }
     };
 
     useEffect(() => {
@@ -61,30 +78,51 @@ const AddDepartmentPage = ({ close }) => {
     }, [loggedIn, loading, userId]);
 
     return (
-        <div className="create-account-container">
-            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-
-                    <form id="Add department" onSubmit={handleSubmit}>
-                        <h2>Add Department</h2>
-                        {/* List of input fields using the same handleChange for all */}
-                        <label >Department Name:</label>
-                        <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
-                        <label >Manager</label>
-                        <select
-                            name="playlist_id"
-                            value={formData.departmentManagerId || ''}
-                            onChange={e => setFormData(currentFormData => ({ ...currentFormData, departmentManagerId: e.target.value }))}
-                        >
-                            <option value="" disabled>Select Manager</option>
-                            {adminList.map((a) => (
-                                <option key={a.employee_id} value={a.employee_id}>{a.employee_id}: {a.employee_firstname} {a.employee_lastname}</option>
-                            ))}
-                        </select>
-                        <button onClick={close} type="submit">Add</button>
-                    </form>
-
-        </div>
-    );
+        <Container component="main" maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+            <Typography variant="h5" component="h1" gutterBottom>
+                Add Department
+            </Typography>
+            <form onSubmit={handleSubmit} noValidate>
+                {errMsg && <Typography color="error" gutterBottom ref={errRef}>{errMsg}</Typography>}
+                <FormControl fullWidth margin="normal">
+                    <TextField
+                        label="Department Name"
+                        type="text"
+                        name="departmentName"
+                        value={formData.departmentName}
+                        onChange={handleChange}
+                        required
+                    />
+                </FormControl>
+                <FormControl fullWidth margin="normal">
+                    <InputLabel id="manager-label">Manager</InputLabel>
+                    <Select
+                        labelId="manager-label"
+                        id="manager-select"
+                        name="departmentManagerId"
+                        value={formData.departmentManagerId}
+                        label="Manager"
+                        onChange={handleChange}
+                        required
+                    >
+                        <MenuItem value="">
+                            <em>Select Manager</em>
+                        </MenuItem>
+                        {adminList.map((admin) => (
+                            <MenuItem key={admin.employee_id} value={admin.employee_id}>
+                                {admin.employee_id}: {admin.employee_firstname} {admin.employee_lastname}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <Button variant="contained" color="primary" type="submit" sx={{ mt: 3, mb: 2 }}>
+                    Add Department
+                </Button>
+            </form>
+        </Paper>
+    </Container>
+);
 };
 
 export default AddDepartmentPage;

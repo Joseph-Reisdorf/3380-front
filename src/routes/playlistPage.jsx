@@ -3,13 +3,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/authContext';
 import { Button, TextField, Card, Grid, Box, CardContent, Typography, List, ListItem, ListItemText } from '@mui/material';
-
+import { usePlaylist } from "../context/playlistContext.mjs";
 const PlaylistPage = () => {
     const { loggedIn, userId, userRole, loading } = useAuth();
     const [playlists, setPlaylists] = useState([]);
     const [newPlaylist, setNewPlaylist] = useState('');
     const [addingPlaylist, setAddingPlaylist] = useState(false);
     const navigate = useNavigate();
+
+    const { setCurrent } = usePlaylist();
 
     useEffect(() => {
         if (!loading && !loggedIn) {
@@ -67,8 +69,9 @@ const PlaylistPage = () => {
         }
     };
 
-    const handlePlay = (trackId) => {
-        console.log('Playing track:', trackId);
+    const handlePlay = (track) => {
+        setCurrent(track);
+
     };
     return (
         <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
@@ -116,8 +119,8 @@ const PlaylistPage = () => {
                                             },
                                             transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out'
                                         }}>
-                                            <ListItemText primary={track.track_name} secondary={`Genre: ${track.genre_name}, Artist: ${track.artist_name}`} />
-                                            <Button onClick={() => handlePlay(track.track_id)} variant="outlined" color="primary" sx={{ ml: 1 }}>
+                                            <ListItemText primary={track.track_name} secondary={`Genre: ${track.genre_name}, Artist: ${track.artist_display_name}`} />
+                                            <Button onClick={() => handlePlay(track)} variant="outlined" color="primary" sx={{ ml: 1 }}>
                                                 Play
                                             </Button>
                                         </ListItem>

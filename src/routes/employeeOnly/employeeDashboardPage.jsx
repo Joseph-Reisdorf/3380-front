@@ -5,6 +5,7 @@ import AddDepartmentPage from './addDepartment';
 import { useAuth } from '../../context/authContext';
 import CompanyInfoPage from './companyInfo';
 //import ReportsPage from './reportsPage';
+import {Container, Button} from '@mui/material';
 
 const EmployeeDashboardPage = () => {
 
@@ -65,11 +66,18 @@ const EmployeeDashboardPage = () => {
         <div>  
             <h1>Employee Dashboard</h1>
             <CompanyInfoPage/>
-            <button onClick={handleShowAddEmployee}>Add Employee</button>
-            <button onClick={handleShowAddDepartment}>Add Department</button>
+            <Container>
+            <Button variant="contained" color="primary" onClick={handleShowAddEmployee}>Add Employee</Button>
+            <Button  variant="contained" color="primary" onClick={handleShowAddDepartment}>Add Department</Button>
+            </Container>
             {showAddDepartment && <AddDepartmentPage close={handleClose} />}
             {showAddEmployee && <AddEmployeePage close={handleClose} />}
             
+            {!showAddDepartment && !showAddEmployee && (
+                <div>
+                    <h2>No add item selected</h2>
+                </div>
+            )}
         </div>
         
 

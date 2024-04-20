@@ -4,6 +4,7 @@ import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 import AddAlbumPage from './addAlbumPage';
 import AddTrackPage from './addTrackPage';
+import ClicksDashboard from './clicksDashboard';
 import {
     Paper, Button, Typography, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, TablePagination
@@ -18,6 +19,37 @@ const ArtistDashboardPage = () => {
     const [addingAlbum, setAddingAlbum] = useState(false);
     const [addingTrack, setAddingTrack] = useState(false);
     
+    const [reportOrAlbum, setReportOrAlbum] = useState(false);
+    
+    const handleDeleteAlbum = (albumId) => {
+        // Implement delete functionality here
+        console.log(`Deleting album with ID: ${albumId}`);
+        if (albumId) {
+            axios.delete(`${process.env.REACT_APP_BACK_URL}/albums/delete_album/${albumId}`)
+                .then(res => {
+                    console.log(res.data);
+                    // Update the albums state to reflect the change
+                    setAlbums(prevAlbums => prevAlbums.filter(album => album.album_id !== albumId));
+                })
+                .catch(error => console.error('Error deleting album:', error));
+        }
+    };
+
+    const handleDeleteTrack = (trackId) => {
+        if (trackId) {
+            axios.delete(`${process.env.REACT_APP_BACK_URL}/tracks/delete_track/${trackId}`)
+                .then(res => {
+                    console.log(res.data);
+                    // Update the albums state to reflect the change
+                    setAlbums(prevAlbums => prevAlbums.map(album => {
+                        const updatedTracks = album.tracks.filter(track => track.track_id !== trackId);
+                        return { ...album, tracks: updatedTracks };
+                    }));
+                })
+                .catch(error => console.error('Error deleting track:', error));
+
+        }
+    };
 
     // Combined useEffect for authentication and data fetching
     useEffect(() => {
@@ -87,6 +119,8 @@ const ArtistDashboardPage = () => {
     };
 
     return (
+
+
         <Paper className="admin-dashboard-container">
             <Typography variant="h4" component="h1" className="dashboard-title">
                 Artist Dashboard
@@ -94,6 +128,14 @@ const ArtistDashboardPage = () => {
             <Typography variant="h6" component="h3" className="dashboard-subtitle">
                 Follower Count: {followerCount || 0}
             </Typography>
+
+            <Button onClick={() => setReportOrAlbum(!reportOrAlbum)} variant="contained" >
+                {reportOrAlbum ? "Show Album Table" : "Plays Report"}
+            </Button>
+            
+            {reportOrAlbum && <ClicksDashboard  />}
+
+            {!reportOrAlbum  && (
             <TableContainer component={Paper} className='table'>
                 <Table aria-label="albums table">
                     <TableHead className='thead'>
@@ -102,6 +144,7 @@ const ArtistDashboardPage = () => {
                             <TableCell>Description</TableCell>
                             <TableCell>Release Date</TableCell>
                             <TableCell>Tracks</TableCell>
+                            <TableCell>Delete</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -118,6 +161,7 @@ const ArtistDashboardPage = () => {
                                                     <TableCell>Track Name</TableCell>
                                                     <TableCell>Release Date</TableCell>
                                                     <TableCell>Genre</TableCell>
+                                                    <TableCell>Delete</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -132,6 +176,11 @@ const ArtistDashboardPage = () => {
                                                             ) : (
                                                                 track.track_genre || 'No Genre Info'
                                                             )}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Button onClick={() => handleDeleteTrack(track.track_id)}>
+                                                                Delete
+                                                            </Button>
                                                         </TableCell>
                                                     </TableRow>
                                                 ))}
@@ -148,11 +197,17 @@ const ArtistDashboardPage = () => {
                                         />
                                     </TableContainer>
                                 </TableCell>
+                                <TableCell>
+                                    <Button onClick={() => handleDeleteAlbum(album.album_id)}>
+                                        Delete
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+            )}
             <div className='report-container'>
                 <Button variant="contained" onClick={() => setAddingAlbum(!addingAlbum)} className="button">
                     Add Album
@@ -164,6 +219,7 @@ const ArtistDashboardPage = () => {
                 {addingAlbum && <AddAlbumPage open={addingAlbum} onClose={() => setAddingAlbum(false)} />}
             </div>
         </Paper>
+
     );
 };
 

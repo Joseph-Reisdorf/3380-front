@@ -47,16 +47,7 @@ const AnalyticsPage = () => {
         <div>
             <h1>Analytics</h1>
             <div className='analytics-buttons-container'>
-                <Button 
-                    className="cool-button" 
-                    variant="contained" 
-                    style={{
-                        backgroundColor: showGenre ? '#bd6f77' : '#6f9bc9', // custom colors using hex codes
-                        color: '#fff' // setting text color to white
-                    }}
-                    onClick={handleShowGenre}>
-                    Genre Report
-                </Button>
+                
                 <Button 
                     className="cool-button" 
                     variant="contained" 
@@ -67,19 +58,6 @@ const AnalyticsPage = () => {
                     onClick={handleShowArtistListener}>
                     Artist/Listener Report
                 </Button>
-            </div>
-            {showGenre && <GenreReportPage />}
-            {showArtistListener && <ArtistListenerReportPage />}
-
-            {false && <ArtistRankingReport />}
-        </div>
-
-    );
-};
-
-
-/*
-
                 <Button 
                     className="cool-button" 
                     variant="contained" 
@@ -89,6 +67,29 @@ const AnalyticsPage = () => {
                     }}
                     onClick={handleShowArtistRankingReport}>
                     Artist Ranking Report 
-                    </Button>*/
+                    </Button>
+            </div>
+            {false && <GenreReportPage />}
+            {showArtistListener && <ArtistListenerReportPage />}
+
+            {showArtistRankingReport && <ArtistRankingReport />}
+        </div>
+
+    );
+};
+
+
+/*
+<Button 
+                    className="cool-button" 
+                    variant="contained" 
+                    style={{
+                        backgroundColor: showGenre ? '#bd6f77' : '#6f9bc9', // custom colors using hex codes
+                        color: '#fff' // setting text color to white
+                    }}
+                    onClick={handleShowGenre}>
+                    Genre Report
+                </Button>
+                */
 
 export default AnalyticsPage;

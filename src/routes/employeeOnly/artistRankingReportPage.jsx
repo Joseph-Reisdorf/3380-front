@@ -3,66 +3,75 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../styles/artistRankingReportPage.css';
-import Chart from './ChartComponent'; // Import the Chart component
 
 const ArtistReport = () => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [includeTracks, setIncludeTracks] = useState(false);
-    const [includeAlbums, setIncludeAlbums] = useState(false);
-    const [includeListens, setIncludeListens] = useState(false);
     const [reportData, setReportData] = useState([]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // Function to fetch artist ranking by tracks
+    const fetchArtistRankingByTracks = async (startDate, endDate) => {
         try {
-            let requests = [];
-            if (includeTracks) {
-                requests.push(axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_ranking_by_tracks`, {
-                    params: {
-                        start_date: startDate,
-                        end_date: endDate,
-                    }
-                }));
-            }
-            if (includeAlbums) {
-                requests.push(axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_ranking_by_albums`, {
-                    params: {
-                        start_date: startDate,
-                        end_date: endDate,
-                    }
-                }));
-            }
-            if (false) {
-                requests.push(axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_ranking_by_listens`, {
-                    params: {
-                        start_date: startDate,
-                        end_date: endDate,
-                    }
-                }));
-            }
-            const responses = await Promise.all(requests);
-            const mergedData = responses.reduce((acc, response) => [...acc, ...response.data], []);
-            setReportData(mergedData);
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_ranking_by_tracks/${startDate}/${endDate}`, {
+                params: {
+                    start_date: startDate,
+                    end_date: endDate,
+                }
+            });
+            return response.data;
         } catch (error) {
-            console.error('Error fetching artist ranking report:', error);
+            console.error('Error fetching artist ranking by tracks:', error);
+            return [];
         }
     };
 
-    const renderCharts = () => {
-        const chartsToRender = [];
+    // Function to fetch artist ranking by albums
+    const fetchArtistRankingByAlbums = async (startDate, endDate) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_ranking_by_albums/${startDate}/${endDate}`, {
+                params: {
+                    start_date: startDate,
+                    end_date: endDate,
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching artist ranking by albums:', error);
+            return [];
+        }
+    };
 
-        if (includeTracks) {
-            chartsToRender.push(<Chart key="tracks" data={reportData.filter(artist => artist.type === 'tracks')} />);
+    const fetchArtistRankingByListens = async (startDate, endDate) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/artists/get_artist_ranking_by_listens/${startDate}/${endDate}`, {
+                params: {
+                    start_date: startDate,
+                    end_date: endDate,
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching artist ranking by listens:', error);
+            return [];
         }
-        if (includeAlbums) {
-            chartsToRender.push(<Chart key="albums" data={reportData.filter(artist => artist.type === 'albums')} />);
-        }
-        if (includeListens) {
-            chartsToRender.push(<Chart key="listens" data={reportData.filter(artist => artist.type === 'listens')} />);
-        }
+    };
 
-        return chartsToRender;
+    // Main handleSubmit function
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+        const formattedEndDate = endDate.toISOString().split('T')[0];
+
+        try {
+            const tracksData = await fetchArtistRankingByTracks(formattedStartDate, formattedEndDate);
+            const albumsData = await fetchArtistRankingByAlbums(formattedStartDate, formattedEndDate);
+            const listensData = await fetchArtistRankingByListens(formattedStartDate, formattedEndDate);
+
+            // Set the report data
+            setReportData({ tracks: tracksData, albums: albumsData , listens: listensData});
+        } catch (error) {
+            console.error('Error fetching artist ranking report:', error);
+        }
     };
 
     return (
@@ -88,40 +97,84 @@ const ArtistReport = () => {
                             dateFormat="MM/dd/yyyy"
                         />
                     </div>
-                    <div className="form-group">
-                        <label>
-                            Include Tracks:
-                            <input
-                                type="checkbox"
-                                checked={includeTracks}
-                                onChange={(e) => setIncludeTracks(e.target.checked)}
-                            />
-                        </label>
-                        <label>
-                            Include Albums:
-                            <input
-                                type="checkbox"
-                                checked={includeAlbums}
-                                onChange={(e) => setIncludeAlbums(e.target.checked)}
-                            />
-                        </label>
-                        <label>
-                            Include Listens:
-                            <input
-                                type="checkbox"
-                                checked={includeListens}
-                                onChange={(e) => setIncludeListens(e.target.checked)}
-                            />
-                        </label>
-                    </div>
                     <button type="submit">Generate Report</button>
                 </form>
-                {reportData.length > 0 && (
-                    <div className="chart-container">
-                        {renderCharts()}
-                    </div>
-                )}
             </div>
+            {reportData.tracks && (
+                <div className="table-container">
+                    <h3>Aritst Ranking By Tracks</h3>
+                    <table className="table">
+                        <thead>
+                            <tr className="table-header">
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Birthdate</th>
+                                <th>Number of Tracks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reportData.tracks.map((artist) => (
+                                <tr className="table-row" key={artist.person_id}>
+                                    <td className="table-cell">{artist.full_name}</td>
+                                    <td className="table-cell">{artist.person_email}</td>
+                                    <td className="table-cell">{artist.person_birthdate.substring(0, 10)}</td>
+                                    <td className="table-cell">{artist.number_of_tracks}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+            {reportData.albums && (
+                <div className="table-container">
+                    <h3>Aritst Ranking By Albums</h3>
+                    <table className="table">
+                        <thead>
+                            <tr className="table-header">
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Birthdate</th>
+                                <th>Number of Albums</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reportData.albums.map((artist) => (
+                                <tr className="table-row" key={artist.person_id}>
+                                    <td className="table-cell">{artist.full_name}</td>
+                                    <td className="table-cell">{artist.person_email}</td>
+                                    <td className="table-cell">{artist.person_birthdate.substring(0, 10)}</td>
+                                    <td className="table-cell">{artist.number_of_albums}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+            {reportData.albums && (
+                <div className="table-container">
+                    <h3>Aritst Ranking By Songs Played</h3>
+                    <table className="table">
+                        <thead>
+                            <tr className="table-header">
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Birthdate</th>
+                                <th>Number of Plays</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reportData.listens.map((artist) => (
+                                <tr className="table-row" key={artist.person_id}>
+                                    <td className="table-cell">{artist.full_name}</td>
+                                    <td className="table-cell">{artist.person_email}</td>
+                                    <td className="table-cell">{artist.person_birthdate.substring(0, 10)}</td>
+                                    <td className="table-cell">{artist.total_listens}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };

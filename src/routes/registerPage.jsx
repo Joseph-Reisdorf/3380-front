@@ -2,6 +2,7 @@ import React from 'react'
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Container, TextField, Button, Typography, Box, Alert } from '@mui/material';
 
 
 
@@ -125,147 +126,148 @@ const CreateAccount = () => {
     }
 
     return (
-        <div className="create-account-container">
-            {success ? (
-                <section>
-                    <h1>Success!</h1>
-                    <p>
-                        <Link to="/login">Login</Link>
-                    </p>
-                </section>
-            ) : (
-                <section>
-                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Register</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="firstName">First Name:</label>
-                        <input
-                            type="text"
+        <Container component="main" maxWidth="xs">
+            <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {success ? (
+                    <>
+                    <Typography variant="h5">Success!</Typography>
+                    <Typography variant="subtitle1">
+                        <Link to="/login">Click here to login</Link>
+                    </Typography>
+                    </>
+                ) : (
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        {errMsg && <Alert severity="error" ref={errRef}>{errMsg}</Alert>}
+                        <Typography component="h1" variant="h5">Register</Typography>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
                             id="firstName"
-                            onChange={(e) => setFirstName(e.target.value)}
+                            label="First Name"
+                            name="firstName"
+                            autoComplete="firstName"
+                            autoFocus
                             value={firstName}
-                            required
+                            onChange={(e) => setFirstName(e.target.value)}
                         />
-                        <label htmlFor="lastName">Last Name:</label>
-                        <input
-                            type="text"
-                            id="lastName"
-                            onChange={(e) => setLastName(e.target.value)}
-                            value={lastName}
-                            required
-                        />
-                        <label htmlFor="middleInitial">Middle Initial:</label>
-                        <input
-                            type="text"
-                            id="middleInitial"
-                            maxLength="1"
-                            onChange={(e) => setMiddleInitial(e.target.value)}
-                            value={middleInitial}
-                        />
-                        <label htmlFor="username">
-                            Username:
 
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={user}
+                        <TextField
+                            margin="normal"
+                            fullWidth
+                            id="middleInitial"
+                            label="Middle Initial"
+                            name="middleInitial"
+                            inputProps={{ maxLength: 1 }}
+                            value={middleInitial}
+                            onChange={(e) => setMiddleInitial(e.target.value)}
+                        />
+                        <TextField
+                            margin="normal"
                             required
-                            aria-invalid={validName ? "false" : "true"}
-                            aria-describedby="uidnote"
+                            fullWidth
+                            id="lastName"
+                            label="Last Name"
+                            name="lastName"
+                            autoComplete="lastName"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
+                            inputRef={userRef}
+                            value={user}
+                            onChange={(e) => setUser(e.target.value)}
+                            error={!validName}
+                            helperText={userFocus && user && !validName ? "4 to 24 characters. Must begin with a letter. Letters, numbers, underscores, hyphens allowed." : " "}
                             onFocus={() => setUserFocus(true)}
                             onBlur={() => setUserFocus(false)}
                         />
-                        <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
-
-                            4 to 24 characters.<br />
-                            Must begin with a letter.<br />
-                            Letters, numbers, underscores, hyphens allowed.
-                        </p>
-
-
-                        <label htmlFor="password">
-                            Password:
-
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            onChange={(e) => setPwd(e.target.value)}
-                            value={pwd}
+                        <TextField
+                            margin="normal"
                             required
-                            aria-invalid={validPwd ? "false" : "true"}
-                            aria-describedby="pwdnote"
+                            fullWidth
+                            id="password"
+                            label="Password"
+                            type="password"
+                            name="password"
+                            autoComplete="new-password"
+                            value={pwd}
+                            onChange={(e) => setPwd(e.target.value)}
+                            error={!validPwd}
+                            helperText={pwdFocus && !validPwd ? "8 to 24 characters. Must include uppercase and lowercase letters, a number and a special character." : " "}
                             onFocus={() => setPwdFocus(true)}
                             onBlur={() => setPwdFocus(false)}
                         />
-                        <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-
-                            8 to 24 characters.<br />
-                            Must include uppercase and lowercase letters, a number and a special character.<br />
-                            Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
-                        </p>
-
-
-                        <label htmlFor="confirm_pwd">
-                            Confirm Password:
-
-
-                        </label>
-                        <input
-                            type="password"
-                            id="confirm_pwd"
-                            onChange={(e) => setMatchPwd(e.target.value)}
-                            value={matchPwd}
+                        <TextField
+                            margin="normal"
                             required
-                            aria-invalid={validMatch ? "false" : "true"}
-                            aria-describedby="confirmnote"
+                            fullWidth
+                            id="confirm_pwd"
+                            label="Confirm Password"
+                            type="password"
+                            name="confirm_pwd"
+                            autoComplete="new-password"
+                            value={matchPwd}
+                            onChange={(e) => setMatchPwd(e.target.value)}
+                            error={!validMatch}
+                            helperText={matchFocus && !validMatch ? "Must match the first password input field." : " "}
                             onFocus={() => setMatchFocus(true)}
                             onBlur={() => setMatchFocus(false)}
                         />
-                        <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-
-                            Must match the first password input field.
-                        </p>
-
-                        <label htmlFor="email">
-                            Email:
-                        </label>
-                        <input
-                            type="email"
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
                             id="email"
-                            onChange={(e) => setEmail(e.target.value)}
+                            label="Email"
+                            type="email"
+                            name="email"
+                            autoComplete="email"
                             value={email}
-                            required
-                            aria-describedby="emailnote"
+                            onChange={(e) => setEmail(e.target.value)}
+                            error={!EMAIL_REGEX.test(email)}
+                            helperText={!EMAIL_REGEX.test(email) ? "Email format must be valid and end with @gmail.com, @uh.edu, or @cougarnet.uh.edu" : " "}
                         />
-                        <p id="emailnote" className={!EMAIL_REGEX.test(email) ? "instructions" : "offscreen"}>
-                            Email format must be valid and end with @gmail.com, @uh.edu, or @cougarnet.uh.edu
-                        </p>
-
-                        <label htmlFor="birthdate">Birthdate:</label>
-                        <input
-                            type="date"
-                            id="birthdate"
-                            onChange={(e) => setBirthdate(e.target.value)}
-                            value={birthdate}
+                        
+                        <TextField
+                            margin="normal"
+                            InputLabelProps={{ shrink: true }}
                             required
-                            aria-invalid={validBirthdate ? "false" : "true"}
-                            aria-describedby="birthdatenote"
+                            fullWidth
+                            id="birthdate"
+                            label="Birthdate"
+                            type="date"
+                            name="birthdate"
+                            autoComplete="bday"
+                            value={birthdate}
+                            onChange={(e) => setBirthdate(e.target.value)}
+                            error={!validBirthdate}
                             onFocus={() => setBirthdateFocus(true)}
                             onBlur={() => setBirthdateFocus(false)}
                         />
-
-
-                        <button disabled={!validName || !validPwd || !validMatch || !validBirthdate ? true : false}>Sign Up</button>
-                    </form>
-
-                </section>
-            )}
-        </div>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={!validName || !validPwd || !validMatch || !validBirthdate}
+                        >
+                            Sign Up
+                        </Button>
+                        <Link to="/login" style={{ textDecoration: 'none' }}>
+                            <Button variant="text">Already have an account? Sign in</Button>
+                        </Link>
+                    </Box>
+                )}
+            </Box>
+        </Container>
     );
 }
 

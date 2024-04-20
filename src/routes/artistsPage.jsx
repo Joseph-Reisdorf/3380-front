@@ -94,10 +94,7 @@ const ArtistsPage = () => {
                             </CardContent>
                             <CardActions>
                                 <Button size="small" onClick={() => handleLike(artist.artist_id)}>
-                                    {likedArtists.includes(artist.artist_id) ? 'Unlike' : 'Like'}
-                                </Button>
-                                <Button size="small" color="primary" onClick={() => navigate(`/artist/${artist.artist_id}`)}>
-                                    View
+                                    {likedArtists.includes(artist.artist_id) ? 'Unfollow' : 'Follow'}
                                 </Button>
                             </CardActions>
                         </Card>

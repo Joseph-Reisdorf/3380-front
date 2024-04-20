@@ -68,11 +68,7 @@ const AddAlbumPage = () => {
                         <label >Release Date:</label>
                         <input type="date" id="album_release_date" name="album_release_date" onChange={handleChange} />
                     </div>
-                    <div>
-                        <label >Album Cover Art:</label>
-                        <input type="file" id="album_cover_art" name="album_cover_art"  onChange={handleChange} accept="image/*"/>
-                    </div>
-                    
+
                     
                     <button type="submit" onClick={handleClick} >Submit</button>
                 </form>
