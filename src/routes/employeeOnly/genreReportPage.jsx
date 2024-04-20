@@ -56,7 +56,7 @@ const GenreReportPage = () => {
         const formattedEndDate = endDate.toISOString().split('T')[0];
     
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genre/get_most_listened_songs_by_genre${formattedStartDate}/${formattedEndDate}`, {
+            const response = await axios.get(`${process.env.REACT_APP_BACK_URL}/genre/get_most_listened_songs_by_genre/${formattedStartDate}/${formattedEndDate}`, {
                 params: { selectedGenre, startDate, endDate }
             });
             setTracks(response.data);
