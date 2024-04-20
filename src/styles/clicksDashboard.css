@@ -50,10 +50,6 @@
     text-align: left;
 }
 
-.table-header th {
-    background-color: #cf6c6c;
-}
-
 .table-row:nth-child(even) {
     background-color: #f2f2f2;
 }

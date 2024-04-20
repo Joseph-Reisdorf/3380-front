@@ -5,10 +5,12 @@ import axios from 'axios';
 import AddAlbumPage from './addAlbumPage';
 import AddTrackPage from './addTrackPage';
 import ClicksDashboard from './clicksDashboard';
-import {
-    Paper, Button, Typography, Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow, TablePagination
+import { 
+    Paper, Button, Typography, Table, TableBody, TableCell, Card, CardContent, CardActions, 
+    TableContainer, TableHead, TableRow, TablePagination, Box,
+    TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
+
 const ArtistDashboardPage = () => {
 
     const { loggedIn, userId, userRole, loading } = useAuth();
@@ -18,7 +20,12 @@ const ArtistDashboardPage = () => {
     const [genres, setGenres] = useState([]);
     const [addingAlbum, setAddingAlbum] = useState(false);
     const [addingTrack, setAddingTrack] = useState(false);
+    const [errMsg, setErrMsg] = useState('');
     
+
+    const [artistBio, setArtistBio] = useState('');
+    const [editBioOpen, setEditBioOpen] = useState(false);
+
     const [reportOrAlbum, setReportOrAlbum] = useState(false);
     
     const handleDeleteAlbum = (albumId) => {
@@ -63,6 +70,7 @@ const ArtistDashboardPage = () => {
         if (userId) {
             axios.get(`${process.env.REACT_APP_BACK_URL}/artists/find_artist_by_id/${userId}`)
                 .then(res => {
+                    setArtistBio(res.data.artist_biography);
                     const artist = res.data;
                     return axios.get(`${process.env.REACT_APP_BACK_URL}/albums/find_albums_by_artist/${userId}`);
                 })
@@ -118,23 +126,99 @@ const ArtistDashboardPage = () => {
         );
     };
 
+    const handleUpdateBio = () => {
+        try {
+            
+            // Handle bio update logic
+            console.log("Update bio with:", artistBio);
+            axios.put(`${process.env.REACT_APP_BACK_URL}/artists/update_artist_bio/${userId}`, { artist_biography: artistBio })
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(error => setErrMsg('Error updating bio'));
+        
+        } catch (error) {
+            console.error('Error updating bio:', error);
+        }
+        // Close the dialog
+        setEditBioOpen(false);
+    };
+    
     return (
 
 
         <Paper className="admin-dashboard-container">
-            <Typography variant="h4" component="h1" className="dashboard-title">
+            <Typography variant="h4" component="h1" className="dashboard-title" sx={{ mt:1}}>
                 Artist Dashboard
             </Typography>
-            <Typography variant="h6" component="h3" className="dashboard-subtitle">
-                Follower Count: {followerCount || 0}
-            </Typography>
-
-            <Button onClick={() => setReportOrAlbum(!reportOrAlbum)} variant="contained" >
-                {reportOrAlbum ? "Show Album Table" : "Plays Report"}
-            </Button>
+            <Box display="flex" justifyContent="center" alignItems="center" sx={{ m: 2 }}>
+                <Card sx={{ maxWidth: 345, width: '100%' }}>
+                    <CardContent>
+                    <Typography variant="h6" component="h4" sx={{ mb: 2, textAlign: 'center' }}>
+                        Follower Count: {followerCount || 0}
+                    </Typography>
+                    <Typography variant="h6" component="h6" sx={{ mb: 2, textAlign: 'center' }}>
+                        Biography: {artistBio || "No biography available"}
+                    </Typography>
+                    {errMsg && (
+                        <Typography variant="h6" component="h6" sx={{ color: 'error.main', mb: 2, textAlign: 'center' }}>
+                        {errMsg}
+                        </Typography>
+                    )}
+                    </CardContent>
+                    <CardActions sx={{ justifyContent: 'center' }}>
+                    <Button
+                        variant="contained"
+                        onClick={() => setEditBioOpen(true)}
+                        sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' }, width: '80%' }}
+                    >
+                        Edit Biography
+                    </Button>
+                    </CardActions>
+                </Card>
+            </Box>
+                                
             
-            {reportOrAlbum && <ClicksDashboard  />}
+            <Button variant="contained" onClick={() => setReportOrAlbum(!reportOrAlbum)} sx={{ mb: 2, bgcolor: 'primary.main', '&:hover': { bgcolor: 'secondary.dark' } }}>
+                {reportOrAlbum ? "Show Album Table" : "Show Album Report"}
+            </Button>
+            <Dialog open={editBioOpen} onClose={() => setEditBioOpen(false)}>
+                <DialogTitle>Edit Biography</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Update your artist biography here.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="bio"
+                        label="Artist Biography"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={artistBio}
+                        onChange={(e) => setArtistBio(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setEditBioOpen(false)}>Cancel</Button>
+                    <Button onClick={handleUpdateBio}>Update</Button>
+                </DialogActions>
+            </Dialog>
 
+
+            <div className='report-container'>
+                <Button variant="contained" onClick={() => setAddingAlbum(!addingAlbum)} className="button">
+                    Add Album
+                </Button>
+                <Button variant="contained" onClick={() => setAddingTrack(!addingTrack)} className="button">
+                    Add Track
+                </Button>
+                {addingTrack && <AddTrackPage albums={albums} open={addingTrack} onClose={() => setAddingTrack(false)} />}
+                {addingAlbum && <AddAlbumPage open={addingAlbum} onClose={() => setAddingAlbum(false)} />}
+            </div>
+            {reportOrAlbum && <ClicksDashboard  />}
+            
             {!reportOrAlbum  && (
             <TableContainer component={Paper} className='table'>
                 <Table aria-label="albums table">
@@ -208,16 +292,6 @@ const ArtistDashboardPage = () => {
                 </Table>
             </TableContainer>
             )}
-            <div className='report-container'>
-                <Button variant="contained" onClick={() => setAddingAlbum(!addingAlbum)} className="button">
-                    Add Album
-                </Button>
-                <Button variant="contained" onClick={() => setAddingTrack(!addingTrack)} className="button">
-                    Add Track
-                </Button>
-                {addingTrack && <AddTrackPage albums={albums} open={addingTrack} onClose={() => setAddingTrack(false)} />}
-                {addingAlbum && <AddAlbumPage open={addingAlbum} onClose={() => setAddingAlbum(false)} />}
-            </div>
         </Paper>
 
     );

@@ -75,7 +75,8 @@ function Player() {
 
 
   if (isLoading) {
-    return <div className="player-container">Loading...</div>;
+    console.log("Loading track blob...")
+    return null; 
   }
 
   if (!blobUrl) {
